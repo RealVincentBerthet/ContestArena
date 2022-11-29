@@ -1,0 +1,24 @@
+body {
+  font-family: "Roboto";
+}
+
+/* 
+button 
+*/
+.btn-group > .btn:not(:first-child) {
+  margin-left: 0px;
+}
+
+.btn-secondary {
+  border: 0px;
+  border-radius: 17px;
+  width: 100px;
+}
+
+.btn-secondary:not(:disabled):not(.disabled):not(.active):hover {
+  opacity: 0.7;
+}
+
+.btn-secondary.focus {
+  box-shadow: none;
+}

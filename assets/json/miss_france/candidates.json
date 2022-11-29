@@ -1,0 +1,274 @@
+{
+    "2023": [
+        {
+            "region": "Alsace",
+            "name": "Camille",
+            "surname": "Sedira",
+            "age": 21,
+            "photos": ["img/candidates/2023/alsace_0.jpg"],
+            "description": "",
+            "instagram": "camillesediraoff"
+        },
+        {
+            "region": "Aquitaine",
+            "name": "Orianne",
+            "surname": "Galvez",
+            "age": 23,
+            "photos": ["img/candidates/2023/aquitaine_0.jpg"],
+            "description": "",
+            "instagram": "oriannegalvezsotooff"
+        },
+        {
+            "region": "Auvergne",
+            "name": "Alissia",
+            "surname": "Ladeveze",
+            "age": 21,
+            "photos": ["img/candidates/2023/auvergne_0.jpg"],
+            "description": "",
+            "instagram": "alissialadevezeoff"
+        },
+        {
+            "region": "Bourgogne",
+            "name": "Lara",
+            "surname": "Lebretton",
+            "age": 23,
+            "photos": ["img/candidates/2023/bourgogne_0.jpg"],
+            "description": "",
+            "instagram": "laralebrettonoff"
+        },
+        {
+            "region": "Bretagne",
+            "name": "Énora",
+            "surname": "Moal",
+            "age": 21,
+            "photos": ["img/candidates/2023/bretagne_0.jpg"],
+            "description": "",
+            "instagram": "enoramoaloff"
+        },
+        {
+            "region": "Centre-Val de Loire",
+            "name": "Coraline",
+            "surname": "Lerasle",
+            "age": 23,
+            "photos": ["img/candidates/2023/centre_val_de_loire_0.jpg"],
+            "description": "",
+            "instagram": "coralinelerasleoff"
+        },
+        {
+            "region": "Champagne-Ardenne",
+            "name": "Solène",
+            "surname": "Scholer",
+            "age": 22,
+            "photos": ["img/candidates/2023/champagne_ardenne_0.jpg"],
+            "description": "",
+            "instagram": "solenescholeroff"
+        },
+        {
+            "region": "Corse",
+            "name": "Orianne",
+            "surname": "Meloni",
+            "age": 21,
+            "photos": ["img/candidates/2023/corse_0.jpg"],
+            "description": "",
+            "instagram": "oriannemelonioff"
+        },
+        {
+            "region": "Côte d'Azur",
+            "name": "Flavy",
+            "surname": "Barla",
+            "age": 19,
+            "photos": ["img/candidates/2023/cote_d_azur_0.jpg"],
+            "description": "",
+            "instagram": "flavy.barlamario"
+        },
+        {
+            "region": "Franche-Comté",
+            "name": "Marion",
+            "surname": "Navarro",
+            "age": 19,
+            "photos": ["img/candidates/2023/franche_comte_0.jpg"],
+            "description": "",
+            "instagram": "marionnavarrooff"
+        },
+        {
+            "region": "Guadeloupe",
+            "name": "Indira",
+            "surname": "Ampiot",
+            "age": 18,
+            "photos": ["img/candidates/2023/guadeloupe_0.jpg"],
+            "description": "",
+            "instagram": "indira.ampiot"
+        },
+        {
+            "region": "Guyane",
+            "name": "Shaïna",
+            "surname": "Robin",
+            "age": 21,
+            "photos": ["img/candidates/2023/guyane_0.jpg"],
+            "description": "",
+            "instagram": "shainarobinoff"
+        },
+        {
+            "region": "Île-de-France",
+            "name": "Adèle",
+            "surname": "Bonnamour",
+            "age": 18,
+            "photos": ["img/candidates/2023/ile_de_france_0.jpg"],
+            "description": "",
+            "instagram": "adelebonnamouroff"
+        },
+        {
+            "region": "Languedoc",
+            "name": "Cameron",
+            "surname": "Valliere",
+            "age": 23,
+            "photos": ["img/candidates/2023/languedoc_0.jpg"],
+            "description": "",
+            "instagram": "cameronvalliereoff"
+        },
+        {
+            "region": "Limousin",
+            "name": "Salomé",
+            "surname": "Maud",
+            "age": 23,
+            "photos": ["img/candidates/2023/limousin_0.jpg"],
+            "description": "",
+            "instagram": "salomemaudoff"
+        },
+        {
+            "region": "Lorraine",
+            "name": "Sarah",
+            "surname": "Aoutar",
+            "age": 26,
+            "photos": ["img/candidates/2023/lorraine_0.jpg"],
+            "description": "",
+            "instagram": "sarahaoutaroff"
+        },
+        {
+            "region": "Martinique",
+            "name": "Axelle",
+            "surname": "René",
+            "age": 21,
+            "photos": ["img/candidates/2023/martinique_0.jpg"],
+            "description": "",
+            "instagram": "axellereneoff"
+        },
+        {
+            "region": "Midi-Pyrénées",
+            "name": "Florence",
+            "surname": "Demortier",
+            "age": 23,
+            "photos": ["img/candidates/2023/midi_pyrenees_0.jpg"],
+            "description": "",
+            "instagram": "florencedemortieroff"
+        },
+        {
+            "region": "Nord - Pas-de-Calais",
+            "name": "Agathe,",
+            "surname": "Cauet",
+            "age": 23,
+            "photos": ["img/candidates/2023/nord_pas_de_calais_0.jpg"],
+            "description": "",
+            "instagram": "Agathecauetoff"
+        },
+        {
+            "region": "Normandie",
+            "name": "Perrine",
+            "surname": "Prunier",
+            "age": 22,
+            "photos": ["img/candidates/2023/normandie_0.jpg"],
+            "description": "",
+            "instagram": "perrineprunieroff"
+        },
+        {
+            "region": "Nouvelle-Calédonie",
+            "name": "Océane",
+            "surname": "Le Goff",
+            "age": 26,
+            "photos": ["img/candidates/2023/nouvelle_caledonie_0.jpg"],
+            "description": "",
+            "instagram": "oceanelegoff.off"
+        },
+        {
+            "region": "Pays de la Loire",
+            "name": "Emma",
+            "surname": "Guibert",
+            "age": 20,
+            "photos": ["img/candidates/2023/pays_de_la_loire_0.jpg"],
+            "description": "",
+            "instagram": "emmaguibertoff"
+        },
+        {
+            "region": "Picardie",
+            "name": " Bérénice",
+            "surname": "Legendre",
+            "age": 26,
+            "photos": ["img/candidates/2023/picardie_0.jpg"],
+            "description": "",
+            "instagram": "berenicelegendreoff"
+        },
+        {
+            "region": "Poitou-Charentes",
+            "name": "Marine",
+            "surname": "Paulais",
+            "age": 20,
+            "photos": ["img/candidates/2023/poitou_charentes_0.jpg"],
+            "description": "",
+            "instagram": "marinepaulaisoff"
+        },
+        {
+            "region": "Provence",
+            "name": "Chana",
+            "surname": "Goyons",
+            "age": 18,
+            "photos": ["img/candidates/2023/provence_0.jpg"],
+            "description": "",
+            "instagram": "chanagoyons"
+        },
+        {
+            "region": "Réunion",
+            "name": "Marion",
+            "surname": "Marimoutou",
+            "age": 18,
+            "photos": ["img/candidates/2023/reunion_0.jpg"],
+            "description": "",
+            "instagram": "marionmarimoutou_off"
+        },
+        {
+            "region": "Rhône-Alpes",
+            "name": "Esther",
+            "surname": "Coutin",
+            "age": 24,
+            "photos": ["img/candidates/2023/rhone_alpes_0.jpg"],
+            "description": "",
+            "instagram": "esthercoutinoff"
+        },
+        {
+            "region": "Roussillon",
+            "name": "Chiara",
+            "surname": "Fontaine",
+            "age": 20,
+            "photos": ["img/candidates/2023/roussillon_0.jpg"],
+            "description": "",
+            "instagram": "chiarafontaineoff"
+        },
+        {
+            "region": "Saint-Martin Saint-Barthelemy",
+            "name": "Inès",
+            "surname": "Tessier",
+            "age": 20,
+            "photos": ["img/candidates/2023/saint_martin_saint_barthelemy_0.jpg"],
+            "description": "",
+            "instagram": "inestessieroff"
+        },
+        {
+            "region": "Tahiti",
+            "name": "Herenui",
+            "surname": "Tuheiava",
+            "age": 24,
+            "photos": ["img/candidates/2023/tahiti_0.jpg"],
+            "description": "",
+            "instagram": "herenuituheiavaoff"
+        }
+    ]
+}
