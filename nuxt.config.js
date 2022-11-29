@@ -18,12 +18,15 @@ export default {
       { name: 'format-detection', content: 'telephone=no' }
     ],
     link: [
-      { rel: 'icon', type: 'image/x-icon', href: '/favicon.ico' }
+      { rel: 'icon', type: 'image/x-icon', href: '/favicon.png' },
+      { rel: "stylesheet", href: "http://fonts.googleapis.com/css?family=Poppins" },
+      { rel: "stylesheet", href: "https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:opsz,wght,FILL,GRAD@20..48,100..700,0..1,-50..200" }
     ]
   },
 
   // Global CSS: https://go.nuxtjs.dev/config-css
   css: [
+    '@/assets/css/main.css',
   ],
 
   // Plugins to run before rendering page: https://go.nuxtjs.dev/config-plugins
@@ -35,23 +38,52 @@ export default {
 
   // Modules for dev and build (recommended): https://go.nuxtjs.dev/config-modules
   buildModules: [
+    '@nuxt/postcss8',
   ],
 
   // Modules: https://go.nuxtjs.dev/config-modules
   modules: [
-    // https://go.nuxtjs.dev/bootstrap
-    'bootstrap-vue/nuxt',
-    // https://go.nuxtjs.dev/axios
-    '@nuxtjs/axios',
+    '@nuxtjs/firebase',
+    '@nuxtjs/toast',
   ],
 
-  // Axios module configuration: https://go.nuxtjs.dev/config-axios
-  axios: {
-    // Workaround to avoid enforcing hard-coded localhost:3000: https://github.com/nuxt-community/axios-module/issues/308
-    baseURL: '/',
+  toast: {
+    position: 'bottom-center'
   },
+
+  firebase: {
+    config: {
+      apiKey: "AIzaSyDCVsnmc8cBxqFeRM844ej0g-M0MyM9of0",
+      authDomain: "contestarena-5c70a.firebaseapp.com",
+      databaseURL: "https://contestarena-5c70a-default-rtdb.europe-west1.firebasedatabase.app",
+      projectId: "contestarena-5c70a",
+      storageBucket: "contestarena-5c70a.appspot.com",
+      messagingSenderId: "429075200533",
+      appId: "1:429075200533:web:048988ab861b7e84726c1c",
+      measurementId: "G-GT0LE2P4H1"
+    },
+    services: {
+      auth: {
+        persistence: 'local', // default
+        initialize: {
+          onAuthStateChangedMutation: 'ON_AUTH_STATE_CHANGED_MUTATION',
+          onAuthStateChangedAction: 'onAuthStateChangedAction',
+          subscribeManually: false
+        },
+      },
+      storage: true,
+      database: true,
+    }
+  },
+
 
   // Build Configuration: https://go.nuxtjs.dev/config-build
   build: {
+    postcss: {
+      plugins: {
+        tailwindcss: {},
+        autoprefixer: {},
+      },
+    },
   }
 }
