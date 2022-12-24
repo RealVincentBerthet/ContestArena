@@ -1,244 +1,188 @@
 <template>
-  <section>
-    <!-- Identification register or login -->
-    <div class="flex justify-center items-center py-4">
-      <div
-        class="inline-flex flex-wrap text-center bg-neutral text-white rounded-full"
-      >
-        <div class="w-24" v-for="item in tabs_allowed" :key="item">
-          <input
-            type="radio"
-            name="identification"
-            :id="item"
-            class="peer w-full hidden"
-            :value="item"
-            v-model="tab"
-          />
-          <label
-            :for="item"
-            class="inline-block cursor-pointer select-none rounded-full leading-10 first-letter:capitalize h-full w-full peer-checked:bg-neutral-dark"
-            >{{ item }}</label
+  <div>
+    <section>
+      <!-- identification selection -->
+      <div class="block fixed inset-x-0 top-14 z-10 bg-default-lightest">
+        <NavSubBar
+          :modelValue="tab"
+          @update:modelValue="(v) => (tab = v)"
+          :tabs="tabs"
+        ></NavSubBar>
+      </div>
+    </section>
+    <!-- register / login / reset -->
+    <section class="my-16">
+      <div class="w-full max-w-lg items-center mx-auto">
+        <form @submit.prevent="submitAction">
+          <FormField
+            :modelValue="mail"
+            @update:modelValue="(v) => (mail = v)"
+            label="email"
+            input_type="email"
+            theme_bg="bg-neutral"
+            theme_text="text-black"
+            theme_label="text-black"
+            theme_border="border-neutral"
+          ></FormField>
+          <FormField
+            :modelValue="pseudo"
+            @update:modelValue="(v) => (pseudo = v)"
+            label="pseudo"
+            input_type="text"
+            input_min="3"
+            theme_bg="bg-neutral"
+            theme_text="text-black"
+            theme_label="text-black"
+            theme_border="border-neutral"
+            v-if="tab.includes('register')"
+          ></FormField>
+          <FormCountry
+            :modelValue="country"
+            @update:modelValue="(v) => (country = v)"
+            label="country"
+            theme_bg="bg-neutral"
+            theme_text="text-black"
+            theme_label="text-black"
+            theme_border="border-neutral"
+            v-if="tab.includes('register')"
+          ></FormCountry>
+          <FormField
+            :modelValue="password"
+            @update:modelValue="(v) => (password = v)"
+            label="password"
+            input_type="password"
+            input_min="6"
+            theme_bg="bg-neutral"
+            theme_text="text-black"
+            theme_label="text-black"
+            theme_border="border-neutral"
+            v-if="tab.includes('register') || tab == 'login'"
+          ></FormField>
+          <div
+            class="text-neutral text-xs underline first-letter:capitalize cursor-pointer"
+            v-if="tab == 'login'"
+            @click="tab = 'login_reset'"
           >
-        </div>
+            forgot password?
+          </div>
+          <FormButton
+            type="submit"
+            :label="tabs[tab].name"
+            :disabled="_is_submit_disabled"
+            class="my-8"
+          ></FormButton>
+        </form>
       </div>
-    </div>
-    <div>
-      <!-- @TODO nok alginement en large -->
-      <div>
-        <div class="w-full max-w-lg items-center mx-auto py-8">
-          <div class="w-full" v-if="tab != 'profile'">
-            <!-- email -->
-            <div>
-              <label for="email" class="block">
-                <span
-                  class="block font-medium after:content-['*'] after:ml-0.5 first-letter:capitalize after:text-red-500"
-                  >mail</span
-                >
-                <input
-                  type="email"
-                  id="email"
-                  v-model="mail"
-                  class="px-1 py-3 w-full bg-inherit border-transparent focus:border-transparent border rounded-md border-gray-400 text-sm focus:outline-none focus:ring-1 focus:ring-blue-500 focus:border-blue-500 focus:bg-blue-100 first-letter:invalid:text-pink-700 invalid:focus:ring-pink-700 invalid:focus:border-pink-700 invalid:focus:bg-pink-100 peer"
-                />
-                <p
-                  class="text-xs m-1 text-pink-700 invisible first-letter:capitalize peer-invalid:visible"
-                >
-                  Not a valid email
-                </p>
-              </label>
-            </div>
-            <!--pseudo -->
-            <div v-if="tab == 'register'">
-              <label for="pseudo" class="block">
-                <span
-                  class="block font-medium after:content-['*'] after:ml-0.5 first-letter:capitalize after:text-red-500"
-                  >Pseudo</span
-                >
-                <input
-                  type="text"
-                  v-model="pseudo"
-                  id="pseudo"
-                  minlength="3"
-                  class="px-1 py-3 w-full bg-inherit border-transparent focus:border-transparent border rounded-md border-gray-400 text-sm focus:outline-none focus:ring-1 focus:ring-blue-500 focus:border-blue-500 focus:bg-blue-100 first-letter:invalid:text-pink-700 invalid:focus:ring-pink-700 invalid:focus:border-pink-700 invalid:focus:bg-pink-100 peer"
-                />
-                <p
-                  class="text-xs m-1 text-pink-700 invisible first-letter:capitalize peer-invalid:visible"
-                >
-                  cannot be less than 3 characters
-                </p>
-              </label>
-            </div>
-            <!-- password -->
-            <div class="relative">
-              <div
-                class="absolute flex right-4 mt-1.5 items-center ml-2 h-full"
-              >
-                <button class="px-1 block focus:outline-none">
-                  <span class="material-symbols-outlined"> visibility </span>
-                </button>
-              </div>
-              <label for="password" class="block">
-                <span
-                  class="block font-medium after:content-['*'] after:ml-0.5 first-letter:capitalize after:text-red-500"
-                  >Password</span
-                >
-                <input
-                  type="password"
-                  id="password"
-                  v-model="pwd"
-                  minlength="5"
-                  class="px-1 py-3 w-full bg-inherit border-transparent focus:border-transparent border rounded-md border-gray-400 text-sm focus:outline-none focus:ring-1 focus:ring-info-500 focus:border-blue-500 focus:bg-blue-100 first-letter:invalid:text-pink-700 invalid:focus:ring-pink-700 invalid:focus:border-pink-700 invalid:focus:bg-pink-100 peer"
-                />
-                <p
-                  class="text-xs m-1 text-pink-700 invisible first-letter:capitalize peer-invalid:visible"
-                >
-                  cannot be less than 6 characters
-                </p>
-              </label>
-            </div>
-          </div>
-          <!-- <div v-if="tab_in_use == 'login'">
-          <button class="underline">Forgot password ?</button>
-          </div> -->
-          <div v-if="tab == 'profile'">
-            You are logged as
-            <span class="font-bold">{{ this.$store.getters.getPlayer }}</span>
-            on
-            <span class="font-bold">
-              {{ this.$store.getters.getPlayerMail }}</span
-            >
-          </div>
-          <div class="py-12">
-            <button
-              class="bg-paris-darkest hover:bg-paris-dark py-3 text-white rounded-full max-w-lg justify-center w-full first-letter:capitalize"
-              @click="register()"
-            >
-              {{ tabs[tab].button }}
-            </button>
-          </div>
-        </div>
-      </div>
-    </div>
-  </section>
+    </section>
+  </div>
 </template>
 
-<script>
+<script scoped>
 export default {
-  layout: "identification",
-  data() {
+  layout: "contest",
+  head() {
     return {
-      mail: "",
-      pseudo: "",
-      pwd: "",
-      tabs: {
-        register: { button: "register" },
-        login: { button: "login" },
-        profile: { button: "logout" },
+      title: "Contest Arena | Identification",
+      bodyAttrs: {
+        class: "bg-default-lightest",
       },
-      tab_in_use: "",
     };
   },
+  data() {
+    return {
+      tabs: {
+        login: { name: "login" },
+        login_reset: { name: "reset", active: false },
+        register: { name: "register" },
+      },
+      tab: "",
+      mail: "",
+      pseudo: "",
+      country: "",
+      password: "",
+    };
+  },
+  async fetch() {
+    try {
+      if (this.$fire.auth.currentUser === null) {
+        this.$store.commit("user/setUser", {});
+      } else {
+        this.$router.push("/profile");
+      }
+    } catch (e) {
+      console.error(e);
+    }
+  },
+  created() {
+    this.tab = Object.keys(this.tabs)[0];
+  },
+  //@TODO google login
   computed: {
-    tabs_allowed: {
+    _is_submit_disabled: {
       get() {
-        if (this.$store.getters.getPlayer != "") {
-          this.tab_in_use = "profile";
+        let state = false;
+        if (this.tab == "register") {
+          state = !(this.mail && this.pseudo && this.country && this.password);
+        } else if (this.tab == "login") {
+          state = !(this.mail && this.password);
+        } else if (this.tab == "login_reset") {
+          state = !this.mail;
         }
-        return this.tab_in_use == "profile"
-          ? ["profile"]
-          : ["register", "login"];
-      },
-    },
-    tab: {
-      get() {
-        return this.tab_in_use != "" ? this.tab_in_use : this.tabs_allowed[0];
-      },
-      set(value) {
-        this.tab_in_use = value;
+        return state;
       },
     },
   },
   methods: {
-    register() {
-      if (this.tab == "profile" && this.$store.getters.getPlayer != "") {
-        this.$store.commit("setPlayer", "");
-        this.$store.commit("setPlayerMail", "");
-        this.$store.commit("setPlayerUid", "");
-        this.$toast.show(`You have been disconnected`, {
-          duration: 1500,
-          type: "success",
-        });
-        this.tab = "register";
+    submitAction() {
+      if (this.tab == "register") {
+        this.register(this.mail, this.password, this.pseudo, this.country);
       } else if (this.tab == "login") {
-        this.login();
-      } else if (this.tab == "register") {
-        this.createUser();
+        this.login(this.mail, this.password);
+      } else if (this.tab == "login_reset") {
+        this.passwordReset(this.mail);
+      } else {
+        alert(`No valid submit action for '${this.tab}'`);
       }
     },
-    async pushUserInDB(uid, pseudo, mail) {
-      let values = { pseudo: pseudo, mail: mail };
-      this.$fire.database.ref(`/users/${uid}`).set(values);
-      //TODO mettre des try catch de partout bordel
-    },
-    async createUser() {
-      if (this.pwd.length >= 5 && this.pseudo.length > 3) {
-        try {
-          const userCredential =
-            await this.$fire.auth.createUserWithEmailAndPassword(
-              this.mail,
-              this.pwd
-            );
-          this.$store.commit("setPlayer", this.pseudo);
-          this.$store.commit("setPlayerMail", this.mail);
-          this.$store.commit("setPlayerUid", userCredential.user.uid);
-          this.tab = "profile";
-          this.pushUserInDB(
-            this.$store.getters.getPlayerUid,
-            this.$store.getters.getPlayer,
-            this.$store.getters.getPlayerMail
-          );
-          this.$toast.show(
-            `You have been register and logged as ${this.mail}`,
-            {
-              duration: 3000,
-              type: "success",
-            }
-          );
-        } catch (e) {
-          this.$toast.show(`${e.message}`, {
-            duration: 5000,
-            type: "error",
-          });
-        }
-      } else {
-        this.$toast.show(`Form not completed`, {
+    async register(mail, password, pseudo, country) {
+      try {
+        // register user
+        const user_credential =
+          await this.$fire.auth.createUserWithEmailAndPassword(mail, password);
+        // push user profile
+        this.$fire.database
+          .ref(`/users/${user_credential.user.uid}`)
+          .set({ pseudo: pseudo, country: country });
+
+        this.$toast.show("You have been register and logged", {
+          duration: 3000,
+          type: "success",
+        });
+        this.$router.push("/profile");
+      } catch (e) {
+        this.$toast.show(`${e.message}`, {
           duration: 5000,
           type: "error",
         });
       }
     },
-    async login() {
+    async login(mail, password) {
       try {
-        const ret = await this.$fire.auth
-          .signInWithEmailAndPassword(this.mail, this.pwd)
+        await this.$fire.auth
+          .signInWithEmailAndPassword(mail, password)
           .then((userCredential) => {
             // Signed in
-            this.$toast.show(`You have been logged with ${this.mail}`, {
+            this.$fire.database
+              .ref(`/users/${userCredential.user.uid}`)
+              .once("value", (data) => {
+                const user_data = data.val();
+                this.$store.commit("user/setUser", user_data);
+              });
+            this.$toast.show("You have been correctly logged", {
               duration: 1500,
               type: "success",
             });
-
-            this.$fire.database
-              .ref(`/users/${userCredential.user.uid}/pseudo`)
-              .once("value", (data) => {
-                this.$store.commit("setPlayer", data.val());
-                this.$store.commit(
-                  "setPlayerUid",
-                  JSON.stringify(userCredential.user.uid)
-                );
-                this.$store.commit("setPlayerMail", this.mail);
-                this.tab = "profile";
-              });
+            this.$router.push("/profile");
           });
       } catch (e) {
         this.$toast.show(`${e.message}`, {
@@ -247,12 +191,22 @@ export default {
         });
       }
     },
+    async passwordReset(mail) {
+      this.$fire.auth
+        .sendPasswordResetEmail(mail)
+        .then(() => {
+          this.$toast.show("An email has been sent to reset your password", {
+            duration: 1500,
+            type: "success",
+          });
+        })
+        .catch((e) => {
+          this.$toast.show(`${e.message}`, {
+            duration: 5000,
+            type: "error",
+          });
+        });
+    },
   },
 };
 </script>
-
-<style scoped>
-label {
-  margin-bottom: 0;
-}
-</style>

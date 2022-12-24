@@ -10,6 +10,10 @@ module.exports = {
   theme: {
     extend: {
       colors: {
+        // Default
+        'default-lightest': "#f5f5f5",
+        'default': '#353535',
+        'default-darkest': '#050505',
         // Neutrals
         'neutral-lightest': '#f1f5fa',
         'neutral-light': '#b9c6d7',

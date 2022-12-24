@@ -12,6 +12,7 @@
           v-for="item in rounds"
           :key="item.name"
           class="flex-block text-center mb-4 w-full"
+          :class="theme_text"
         >
           <div class="py-2">
             <h2 class="font-bold">{{ item.name }}</h2>
@@ -25,13 +26,15 @@
 
 <script>
 export default {
-  name: "MissFranceRules",
-  layout: "missFrance",
-  props:{
+  props: {
     rounds: {
-      default:[],
-      type: Array
-    }
+      default: [],
+      type: Array,
+    },
+    theme_text: {
+      default: "text-black",
+      type: String,
+    },
   },
   methods: {
     formatText(round) {

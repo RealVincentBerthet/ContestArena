@@ -19,7 +19,7 @@ export default {
     ],
     link: [
       { rel: 'icon', type: 'image/x-icon', href: '/favicon.png' },
-      { rel: "stylesheet", href: "http://fonts.googleapis.com/css?family=Poppins" },
+      { rel: "stylesheet", href: "https://fonts.googleapis.com/css2?family=Poppins&display=swap", type:"text/css" },
       { rel: "stylesheet", href: "https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:opsz,wght,FILL,GRAD@20..48,100..700,0..1,-50..200" }
     ]
   },
@@ -56,11 +56,6 @@ export default {
     services: {
       auth: {
         persistence: 'local', // default
-        initialize: {
-          onAuthStateChangedMutation: 'ON_AUTH_STATE_CHANGED_MUTATION',
-          onAuthStateChangedAction: 'onAuthStateChangedAction',
-          subscribeManually: false
-        },
       },
       storage: true,
       database: true,
