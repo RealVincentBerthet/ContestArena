@@ -7,13 +7,11 @@
       >{{ label }}</span
     >
     <select
-      :value="
-        modelValue ? modelValue : elements.length > 0 ? elements[0].value : ''
-      "
-      @input="$emit('update:modelValue', $event.target.value)"
+      :value="modelValue"
+      @change="$emit('update:modelValue', $event.target.value)"
       class="w-full select-none px-2 py-3 bg-inherit border focus:border-transparent rounded-md text-sm disabled:bg-gray-200 focus:outline-none focus:ring-2 focus:ring-blue-500"
       :class="[theme_text, theme_border, disabled ? null : 'cursor-pointer']"
-      :disabled="disabled"
+      :disabled="disabled || elements.length == 0"
     >
       <option v-for="elem in elements" :key="elem.value" :value="elem.value">
         {{ elem.title ? elem.title : elem.value }}

@@ -1,158 +1,141 @@
 <template>
-  <div
-    v-if="
-      data && data.info && data.event && data.candidates && data.event.enabled
-    "
-  >
-    <div>
-      <!-- choices -->
-      <section v-if="['choices', 'watching'].includes(tab)">
-        <!-- round selection -->
-        <div
-          class="block fixed inset-x-0 top-14 z-10"
-          :class="theme.bg.lightest"
-        >
-          <NavSubBar
-            :modelValue="round"
-            @update:modelValue="(v) => (round = v)"
-            :tabs="_tabs_rounds"
-            :theme_active="theme.bg.darkest"
-            :theme_inactive="theme.bg.default"
-            :theme_text="theme.text.default"
-          ></NavSubBar>
-        </div>
-        <!-- cards -->
-        <div class="flex flex-wrap justify-center gap-4 my-16 w-full">
-          <ContestCard
-            v-for="(candidate, key) in event_candidates"
-            v-if="event_pool.includes(key)"
-            :key="key"
-            :id="key"
-            :title="`${candidate.name} ${candidate.surname}`"
-            :subtitle="`${key} | ${candidate.age} years old`"
-            :link="candidate.link"
-            :asset="candidate.asset"
-            :abstract="candidate.abstract"
-            :voting="
-              ((!event_round.locked && !event_qualified.length) || _admin_on) &&
-              event_pool.includes(key)
-            "
-            :liked="_likes.includes(key)"
-            :qualified="event_qualified.includes(key)"
-            :theme_text="theme.text.default"
-            :theme_subtext="theme.text.lightest"
-            theme_img="object-cover h-[360px] w-[360px]"
-            @action:vote="(v) => vote(v)"
-          ></ContestCard>
-        </div>
-      </section>
-      <!-- ranking -->
-      <section v-else-if="tab === 'ranking'">
-        <div
-          class="block fixed inset-x-0 top-14 z-10"
-          :class="theme.bg.lightest"
-        >
-          <NavSubBar
-            :modelValue="subtab"
-            @update:modelValue="(v) => (subtab = v)"
-            :tabs="_tabs_ranking"
-            :theme_active="theme.bg.darkest"
-            :theme_inactive="theme.bg.default"
-            :theme_text="theme.text.default"
-          ></NavSubBar>
-        </div>
-        <div
-          v-if="subtab === 'ranks'"
-          class="flex flex-wrap justify-center gap-4 my-16 w-full"
-        >
-          <ContestRanking
-            :rounds="event_rounds"
-            :players="event_players"
-            @action:watch="(v) => watch(v)"
-            :theme_odd="theme.bg.default"
-            :theme_even="theme.bg.lightest"
-            :theme_text="theme.text.default"
-          ></ContestRanking>
-        </div>
-        <div v-else-if="subtab === 'advanced'">aa</div>
-      </section>
-      <!-- rules -->
-      <section v-else-if="tab === 'rules'">
-        <div>
-          <ContestRules
-            :rounds="event_rounds"
-            :theme_text="theme.text.default"
-          ></ContestRules>
-        </div>
-      </section>
-      <!-- admin -->
-      <section v-else-if="tab == 'admin'">
-        <div class="flex items-center justify-center w-full mt-12 mb-12">
-          <FormToggle
-            label="Administrator"
-            :modelValue="_admin_on"
-            @update:modelValue="(v) => (_admin_on = v)"
-            :theme_text="theme.text.default"
-            :theme_bg="theme.bg.darkest"
-          ></FormToggle>
+  <div v-if="data &&
+    data.settings &&
+    data.settings.info &&
+    (data.settings.enabled || _admin)
+    ">
+    <NavBar :title="title" :theme_bg="theme.bg.lightest"></NavBar>
+    <!-- password -->
+    <div v-if="data.settings.password &&
+      $store.getters['event/password'] != data.settings.password &&
+      !_admin
+      " class="mt-16 w-full max-w-lg items-center mx-auto">
+      <span class="material-symbols-outlined text-center w-full text-9xl" :class="[theme.text.lightest]">
+        lock
+      </span>
+      <div :class="[theme.text.lightest]">
+        <div class="flex justify-center">
+          Contest&nbsp;<span class="font-bold">{{ title }}</span>&nbsp;is protected with a password
         </div>
         <div class="flex justify-center">
-          <ContestManagement
-            :data="data"
-            :theme_bg="theme.bg.default"
-            :theme_text="theme.text.default"
-            :theme_border="theme.border.default"
-            :theme_odd="theme.bg.default"
-            :theme_even="theme.bg.lightest"
-          ></ContestManagement>
+          <FormField modelValue="" input_type="password" input_max="20" :autocomplete="false"
+            :theme_label="theme.text.default" :theme_bg="theme.bg.default" :theme_text="theme.text.default"
+            :theme_border="theme.border.default" @update:modelValue="(v) => $store.commit('event/setPassword', v)">
+          </FormField>
         </div>
-      </section>
-      <!-- none-->
-      <section v-else class="flex">
-        <span
-          class="material-symbols-outlined text-center w-full text-9xl"
-          :class="[theme.text.lightest]"
-        >
-          sentiment_very_dissatisfied
-        </span>
-      </section>
+      </div>
     </div>
-    <NavStatus
-      :statuses="_statuses"
-      @status:id="(v) => (_statuses = v)"
-    ></NavStatus>
-    <div>
-      <!-- Navigation bottom bar-->
-      <NavBottomBar
-        :modelValue="tab"
-        @update:modelValue="(v) => (tab = v)"
-        :progress="_progress"
-        :tabs="_tabs"
-        :theme_bg="theme.bg.darkest"
-        :theme_active="theme.bg.lightest"
-        :theme_text="theme.text.default"
-      ></NavBottomBar>
+
+    <!-- contest content -->
+    <div v-else>
+      <div v-if="data.event && data.event.rounds" class="mx-4">
+        <!--@TODO nok fix top if the title is too long-->
+        <!-- choices -->
+        <section v-if="['choices', 'watching'].includes(tab)">
+          <!-- round selection -->
+          <div class="block fixed inset-x-0 top-14 z-10" :class="theme.bg.lightest">
+            <NavSubBar :modelValue="round" @update:modelValue="(v) => (round = v)" :tabs="_tabs_rounds"
+              :theme_active="theme.bg.dark" :theme_inactive="theme.bg.light" :theme_text="theme.text.default"></NavSubBar>
+          </div>
+          <!-- cards -->
+          <div class="flex flex-wrap justify-center gap-4 my-16 w-full">
+            <ContestCard v-for="(candidate, key) in data &&
+                data.settings &&
+                data.settings.base_pool
+                ? data.settings.base_pool
+                : {}" v-if="event_pool.includes(key)" :key="key" :id="key" :title="key"
+              :title_img="candidate.title_img ? candidate.title_img : ''" :subtitle="candidate.subtitle.length
+                  ? `${candidate.title} | ${candidate.subtitle}`
+                  : candidate.title
+                " :link="candidate.link" :asset="candidate.asset" :abstract="candidate.abstract" :voting="((!event_round.locked && !event_qualified.length) ||
+      _admin_on) &&
+    event_pool.includes(key)
+    " :liked="_likes.includes(key)" :qualified="event_qualified.includes(key)" :theme_default="theme.bg.light"
+              :theme_text="theme.text.default" :theme_subtext="theme.text.lightest"
+              theme_img="object-cover h-[360px] w-[360px]" @action:vote="(v) => vote(v)"></ContestCard>
+          </div>
+        </section>
+        <!-- ranking -->
+        <section v-else-if="tab === 'ranking'">
+          <div class="block fixed inset-x-0 top-14 z-10" :class="theme.bg.lightest">
+            <NavSubBar :modelValue="subtab" @update:modelValue="(v) => (subtab = v)" :tabs="_tabs_ranking"
+              :theme_active="theme.bg.dark" :theme_inactive="theme.bg.default" :theme_text="theme.text.default">
+            </NavSubBar>
+          </div>
+          <div v-if="subtab === 'ranks'" class="flex flex-wrap justify-center gap-4 my-16 w-full">
+            <ContestRanking :rounds="event_rounds" :players="event_players" :filters="_ranking_filters"
+              :modelValue="$store.getters['event/ranking_filter'] ? $store.getters['event/ranking_filter'] : []"
+              @update:modelValue="(v) => $store.commit('event/setRankingFilter', v)" @action:watch="(v) => watch(v)"
+              :theme_odd="theme.bg.light" :theme_even="theme.bg.lightest" :theme_text="theme.text.default">
+            </ContestRanking>
+          </div>
+          <div v-else-if="subtab === 'advanced'"></div>
+        </section>
+        <!-- rules -->
+        <section v-else-if="tab === 'rules'">
+          <div>
+            <ContestRules :rounds="event_rounds" :theme="data.settings.theme" :theme_text="theme.text.default">
+            </ContestRules>
+          </div>
+        </section>
+        <!-- admin -->
+        <section v-else-if="tab == 'admin'">
+          <div class="flex items-center justify-center w-full mt-12 mb-12">
+            <FormToggle label="Administrator" :modelValue="_admin_on" @update:modelValue="(v) => (_admin_on = v)"
+              :theme_text="theme.text.default" :theme_bg="theme.bg.default"></FormToggle>
+          </div>
+          <div v-if="_admin_on" class="flex justify-center">
+            <ContestManagement :data="data" :theme_bg="theme.bg.default" :theme_text="theme.text.default"
+              :theme_border="theme.border.default" :theme_odd="theme.bg.default" :theme_even="theme.bg.lightest"
+              @action:update="(v) =>
+                  update(
+                    v.endpoint,
+                    v.value,
+                    v.admin ? v.admin : false,
+                    v.numberify ? v.numberify : false,
+                    v.confirm ? v.confirm : ''
+                  )
+                "></ContestManagement>
+          </div>
+        </section>
+        <!-- none-->
+        <section v-else class="flex">
+          <span class="material-symbols-outlined text-center w-full text-9xl" :class="[theme.text.light]">
+            sentiment_very_dissatisfied
+          </span>
+        </section>
+      </div>
+      <div v-else>
+        <span class="material-symbols-outlined text-neutral text-center w-full text-9xl">
+          more_horiz
+        </span>
+      </div>
+      <NavStatus :statuses="_statuses" @status:id="(v) => (_statuses = v)"></NavStatus>
+      <div class="pt-16">
+        <!-- Navigation bottom bar-->
+        <NavBottomBar :modelValue="tab" @update:modelValue="(v) => (tab = v)" :progress="_progress" :tabs="_tabs"
+          :theme_bg="theme.bg.default" :theme_active="theme.bg.lightest" :theme_text="theme.text.default"></NavBottomBar>
+      </div>
     </div>
   </div>
   <div v-else class="mt-16">
-    <span
-      class="material-symbols-outlined text-center w-full text-9xl"
-      :class="[theme.text.lightest]"
-    >
+    <span class="material-symbols-outlined text-center w-full text-9xl" :class="[theme.text.light]">
       sentiment_very_dissatisfied
     </span>
-    <span class="flex justify-center w-full" :class="[theme.text.lightest]"
-      >Contest doesn't exists</span
-    >
+    <div class="w-full" :class="[theme.text.light]">
+      <div class="flex justify-center">This contest is not available</div>
+      <div class="flex justify-center underline">
+        <NuxtLink to="/">Back to home</NuxtLink>
+      </div>
+    </div>
   </div>
 </template>
 
 <script>
 export default {
-  layout: "contest",
   head() {
     return {
-      title: "Contest Arena | @TODO",
+      title: `Contest Arena | ${this.title}`,
       bodyAttrs: {
         class: this.theme.bg.lightest,
       },
@@ -160,26 +143,14 @@ export default {
   },
   data() {
     return {
+      title: "",
       tab: "",
       subtab: "",
       round: "0",
-      endpoint: "",
-      data: {},
       watching: {},
       admin: {},
-      theme: {
-        bg: {
-          darkest: "bg-linen-darkest",
-          default: "bg-linen",
-          lightest: "bg-linen-lightest",
-        },
-        text: { default: "text-black", lightest: "text-gray-400" },
-        border: {
-          darkest: "border-neutral-darkest",
-          default: "border-neutral",
-          lightest: "border-neutral-lightest",
-        },
-      },
+      endpoint: "",
+      data: {},
     };
   },
   watch: {
@@ -196,13 +167,23 @@ export default {
     if (this._tabs_ranking) {
       this.subtab = Object.keys(this._tabs_ranking)[0];
     }
+    this.$store.commit('event/setRankingFilter', []);
   },
   async fetch() {
+    this.$store.commit("loader/setVisible", 1);
     try {
       if (this.$route.query && this.$route.query.id) {
         this.endpoint = `/contest/${this.$route.query.id}`;
         await this.$fire.database.ref(this.endpoint).on("value", (snapshot) => {
           this.data = snapshot.val();
+          this.title =
+            this.data &&
+              this.data.settings &&
+              this.data.settings.info &&
+              this.data.settings.info.name
+              ? this.data.settings.info.name
+              : "contest";
+          this.$store.commit("loader/setVisible", -1);
         });
       }
     } catch (e) {
@@ -255,7 +236,6 @@ export default {
       },
     },
     _statuses: {
-      //@TODO transition duration-150 ease-in-out status
       get() {
         let ret = [];
 
@@ -275,6 +255,9 @@ export default {
           } else if (this.event_round.locked) {
             ret.push({ msg: "Round is locked" });
           }
+          if (!this.data.settings.base_pool) {
+            ret.push({ msg: "No choices available yet" });
+          }
         }
 
         if (["ranking"].includes(this.tab)) {
@@ -283,9 +266,29 @@ export default {
           }
         }
 
+        if (["rules"].includes(this.tab)) {
+          if (Object.keys(this.event_rounds).length < 1) {
+            ret.push({ msg: "No rules available yet" });
+          }
+        }
+
         if (["watching"].includes(this.tab)) {
           if (this._watching) {
             ret.push({ msg: `Watching as ${this.watching.name}`, id: "watch" });
+          }
+        }
+
+        if (!["admin"].includes(this.tab)) {
+          if (this.data && this.data.settings && this.data.settings.message) {
+            ret.push({ msg: this.data.settings.message, type: "warning" });
+          }
+          if (this.data && this.data.settings) {
+            if (this.data.settings.enabled === false) {
+              ret.push({
+                msg: "This contest is not available",
+                type: "warning",
+              });
+            }
           }
         }
 
@@ -307,8 +310,8 @@ export default {
         let ret = false;
         if (this.$fire.auth.currentUser) {
           const admins =
-            this.data.event && this.data.event.admins
-              ? this.data.event.admins
+            this.data && this.data.settings && this.data.settings.admins
+              ? this.data.settings.admins
               : [];
           ret = admins.includes(this.$fire.auth.currentUser.uid);
         }
@@ -354,7 +357,6 @@ export default {
       },
     },
     _likes: {
-      //@TODO une option pour hide likes de la manche en cours.
       get() {
         let likes = [];
         if (this.$fire.auth.currentUser) {
@@ -367,12 +369,12 @@ export default {
 
             likes =
               this.event_players &&
-              this.event_players[uid] &&
-              this.event_players[uid].likes &&
-              this.event_players[uid].likes[this.round] &&
-              (this.event_round.watch ||
-                this._admin_on ||
-                (this.event_qualified && this.event_qualified.length > 0))
+                this.event_players[uid] &&
+                this.event_players[uid].likes &&
+                this.event_players[uid].likes[this.round] &&
+                (this.event_round.watch ||
+                  this._admin_on ||
+                  (this.event_qualified && this.event_qualified.length > 0))
                 ? this.event_players[uid].likes[this.round]
                 : [];
           }
@@ -381,9 +383,63 @@ export default {
         return likes;
       },
     },
-    event_candidates: {
+    _ranking_filters: {
       get() {
-        return this.data && this.data.candidates ? this.data.candidates : {};
+        let options = [];
+        let _countries = null;
+        let _players = null;
+        let _squads = null;
+        if (this.$store.getters['user/ranking_filters'].includes('countries')) {
+          options.push({ language: 'Countries', libs: [] })
+          _countries = [];
+        }
+        if (this.$store.getters['user/ranking_filters'].includes('squads')) {
+          options.push({ language: 'Squads', libs: [] })
+          _squads = [];
+        }
+        if (this.$store.getters['user/ranking_filters'].includes('players')) {
+          options.push({ language: 'Players', libs: [] })
+          _players = [];
+        }
+
+
+        if (this.event_players) {
+          Object.keys(this.event_players).forEach((key) => {
+            const player = this.event_players[key];
+            if (player.user_info) {
+              const user_info = player.user_info;
+              if (user_info.country && _countries != null) {
+                const country = user_info.country;
+                if (!_countries.includes(country)) {
+                  _countries.push(country);
+                  options[0].libs.push({ name: country, category: 'Countries' });
+                }
+              }
+              if (user_info.squads && _squads != null) {
+                const squads = user_info.squads;
+                for (let s in squads) {
+                  if (!_squads.includes(squads[s])) {
+                    _squads.push(squads[s]);
+                    options[1].libs.push({ name: squads[s], category: 'Squads' });
+                  }
+                }
+              }
+              if (user_info.pseudo && _players != null) {
+                const pseudo = user_info.pseudo;
+                if (!_players.includes(pseudo)) {
+                  _players.push(pseudo);
+                  options[2].libs.push({ name: pseudo, category: 'Players' });
+                }
+              }
+            }
+          });
+
+          // sort
+          options.forEach((option) => {
+            option.libs.sort((a, b) => (a.name > b.name) ? 1 : ((b.name > a.name) ? -1 : 0));
+          });
+        }
+        return options;
       },
     },
     event_rounds: {
@@ -421,6 +477,91 @@ export default {
           : {};
       },
     },
+    theme: {
+      get() {
+        const themes = {
+          default: {
+            bg: {
+              darkest: "bg-neutral-darkest",
+              dark: "bg-neutral-dark",
+              default: "bg-neutral",
+              light: "bg-neutral-light",
+              lightest: "bg-neutral-lightest",
+            },
+            text: {
+              darkest: "text-default-darkest",
+              dark: "text-default-dark",
+              default: "text-default",
+              light: "text-default-light",
+              lightest: "text-default-lightest",
+            },
+            border: {
+              darkest: "border-default-darkest",
+              dark: "border-default-dark",
+              default: "border-default",
+              light: "border-default-light",
+              lightest: "border-default-lightest",
+            },
+          },
+          linen: {
+            bg: {
+              darkest: "bg-linen-darkest",
+              dark: "bg-linen-dark",
+              default: "bg-linen",
+              light: "bg-linen-light",
+              lightest: "bg-linen-lightest",
+            },
+            text: {
+              darkest: "text-default-darkest",
+              dark: "text-default-dark",
+              default: "text-default",
+              light: "text-default-light",
+              lightest: "text-gray-400",
+            },
+            border: {
+              darkest: "border-default-darkest",
+              dark: "border-default-dark",
+              default: "border-default",
+              light: "border-default-light",
+              lightest: "border-default-lightest",
+            },
+          },
+          purple: {
+            bg: {
+              darkest: "bg-purple-rain-darkest",
+              dark: "bg-purple-rain",
+              default: "bg-purple-rain",
+              light: "bg-purple-rain-light",
+              lightest: "bg-purple-rain-lightest",
+            },
+            text: {
+              darkest: "text-default-darkest",
+              dark: "text-default-dark",
+              default: "text-default",
+              light: "text-default",
+              lightest: "text-default",
+            },
+            border: {
+              darkest: "border-default-darkest",
+              dark: "border-default-dark",
+              default: "border-default",
+              light: "border-default-light",
+              lightest: "border-default-lightest",
+            },
+          },
+        };
+        let ret = themes["default"];
+
+        if (this.data && this.data.settings && this.data.settings.theme) {
+          if (Object.keys(themes).includes(this.data.settings.theme)) {
+            ret = themes[this.data.settings.theme];
+          } else {
+            console.warn(`theme '${this.data.settings.theme}' not available`);
+          }
+        }
+        return ret;
+      },
+    },
   },
   methods: {
     vote(key) {
@@ -431,14 +572,14 @@ export default {
             // initialize
             let endpoints = [];
             const propagate =
-              this.data.event && this.data.event.propagate
-                ? this.data.event.propagate
+              this.data && this.data.settings && this.data.settings.propagate
+                ? this.data.settings.propagate
                 : false;
             const max =
               this.data.event &&
-              this.data.event.rounds &&
-              this.data.event.rounds[this.round] &&
-              this.data.event.rounds[this.round].max
+                this.data.event.rounds &&
+                this.data.event.rounds[this.round] &&
+                this.data.event.rounds[this.round].max
                 ? this.data.event.rounds[this.round].max
                 : -1;
 
@@ -449,7 +590,8 @@ export default {
                 );
                 if (propagate && this.round + 1 < this.event_rounds.length) {
                   endpoints.push(
-                    `${this.endpoint}/event/rounds/${this.round + 1}/pool`
+                    `${this.endpoint}/event/rounds/${Number(this.round) + 1
+                    }/pool`
                   );
                 }
               } else {
@@ -507,6 +649,37 @@ export default {
         });
       });
     },
+    async update(
+      endpoint,
+      value,
+      admin_required,
+      numberify = false,
+      confirm = ""
+    ) {
+      if (admin_required && this._admin_on) {
+        try {
+          if (numberify) {
+            value = Number(value);
+          }
+          if (confirm.length > 0 && !window.confirm(confirm)) {
+            return;
+          } else {
+            if (endpoint === "/" && value === {}) {
+              await this.$fire.database.ref(this.endpoint).remove();
+            } else {
+              await this.$fire.database
+                .ref(this.endpoint + endpoint)
+                .set(value);
+            }
+          }
+        } catch (e) {
+          console.error(e);
+        }
+      } else {
+        console.error("not admin");
+      }
+    },
+
     watch(player) {
       if (
         !this.$fire.auth.currentUse ||

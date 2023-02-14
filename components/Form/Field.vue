@@ -13,13 +13,14 @@
       </span>
     </div>
     <!-- input field -->
-    <label :for="label" class="block">
+    <label class="block">
       <span
         class="relative px-2 top-2.5 left-4 w-auto capitalize font-normal text-xs"
-        :class="[theme_bg, theme_label]"
+        :class="[label ? theme_bg : null, theme_label]"
         >{{ label }}</span
       >
       <input
+        :autocomplete="autocomplete ? null : 'new-password'"
         :type="type"
         :value="modelValue"
         @input="$emit('update:modelValue', $event.target.value)"
@@ -60,7 +61,6 @@ export default {
       type: Boolean,
     },
     label: {
-      required: true,
       type: String,
     },
     input_type: {
@@ -81,6 +81,10 @@ export default {
     },
     required: {
       default: false,
+      type: Boolean,
+    },
+    autocomplete: {
+      default: true,
       type: Boolean,
     },
     theme_bg: {

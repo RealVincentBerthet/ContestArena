@@ -1,70 +1,162 @@
 <template>
   <div class="max-w-4xl pb-8 px-2">
-    <!-- Info -->
+    <!-- Settings -->
     <div class="flex-wrap gap-2 pt-6">
-      <h3 class="font-bold">Info</h3>
-      <div v-if="data && data.info">
-        <div class="border rounded-xl px-4 py-4 my-4" :class="theme_border">
-          <div class="flex gap-2">
-            <FormField
-              label="name"
-              :modelValue="data.info.name"
-              input_min="3"
-              input_max="10"
-              :required="true"
-              :theme_bg="theme_bg"
-              :theme_text="theme_text"
-              :theme_label="theme_text"
-              :theme_border="theme_border"
-            ></FormField>
-            <FormField
-              label="date"
-              input_type="datetime-local"
-              :modelValue="data.info.date"
-              :required="true"
-              :theme_bg="theme_bg"
-              :theme_text="theme_text"
-              :theme_label="theme_text"
-              :theme_border="theme_border"
-            ></FormField>
-          </div>
-          <div class="flex">
-            <FormTextarea
-              label="abstract"
-              :modelValue="data.info.abstract"
-              input_max="100"
-              :theme_bg="theme_bg"
-              :theme_text="theme_text"
-              :theme_label="theme_text"
-              :theme_border="theme_border"
-            ></FormTextarea>
-          </div>
-        </div>
-      </div>
-    </div>
-    <!-- Event -->
-    <div class="flex-wrap gap-2 pt-6">
-      <h3 class="font-bold">Event</h3>
+      <h3 class="font-bold">Settings</h3>
       <div v-if="data && data.event && data.event">
         <div class="border rounded-xl px-4 py-4 my-4" :class="theme_border">
           <div class="flex">
             <FormToggle
               label="enabled"
-              :modelValue="data.event.enabled"
+              :modelValue="data.settings.enabled"
               :theme_text="theme_text"
               :theme_bg="theme_bg"
+              @update:modelValue="
+                (v) =>
+                  $emit('action:update', {
+                    endpoint: `/settings/enabled`,
+                    value: v,
+                    admin: true,
+                  })
+              "
             ></FormToggle>
           </div>
           <div class="inline-flex my-4">
             <FormToggle
               label="admin propagate"
-              :modelValue="data.event.propagate"
+              :modelValue="data.settings.propagate"
               :theme_text="theme_text"
               :theme_bg="theme_bg"
+              @update:modelValue="
+                (v) =>
+                  $emit('action:update', {
+                    endpoint: `/settings/propagate`,
+                    value: v,
+                    admin: true,
+                  })
+              "
             ></FormToggle>
           </div>
+          <FormSelect
+            :modelValue="data.settings.theme"
+            label="theme"
+            :elements="[{ value: 'linen' }, { value: 'purple' }]"
+            :theme_bg="theme_bg"
+            :theme_text="theme_text"
+            :theme_label="theme_label"
+            :theme_border="theme_border"
+            @update:modelValue="
+              (v) =>
+                $emit('action:update', {
+                  endpoint: `/settings/theme`,
+                  value: v,
+                  admin: true,
+                })
+            "
+          ></FormSelect>
+          <div class="flex-wrap gap-2">
+            <div class="flex gap-2">
+              <FormField
+                label="name"
+                :modelValue="data.settings.info.name"
+                input_min="3"
+                input_max="15"
+                :required="true"
+                :theme_bg="theme_bg"
+                :theme_text="theme_text"
+                :theme_label="theme_text"
+                :theme_border="theme_border"
+                @update:modelValue="
+                  (v) =>
+                    $emit('action:update', {
+                      endpoint: `/settings/info/name`,
+                      value: v,
+                      admin: true,
+                    })
+                "
+              ></FormField>
+              <FormField
+                label="date"
+                input_type="datetime-local"
+                :modelValue="data.settings.info.date"
+                :required="true"
+                :theme_bg="theme_bg"
+                :theme_text="theme_text"
+                :theme_label="theme_text"
+                :theme_border="theme_border"
+                @update:modelValue="
+                  (v) =>
+                    $emit('action:update', {
+                      endpoint: `/settings/info/date`,
+                      value: v,
+                      admin: true,
+                    })
+                "
+              ></FormField>
+            </div>
+            <div class="flex">
+              <FormTextarea
+                label="abstract"
+                :modelValue="data.settings.info.abstract"
+                input_max="100"
+                :theme_bg="theme_bg"
+                :theme_text="theme_text"
+                :theme_label="theme_text"
+                :theme_border="theme_border"
+                @update:modelValue="
+                  (v) =>
+                    $emit('action:update', {
+                      endpoint: `/settings/info/abstract`,
+                      value: v,
+                      admin: true,
+                    })
+                "
+              ></FormTextarea>
+            </div>
+            <div class="flex">
+              <FormField
+                label="message"
+                :modelValue="data.settings.message"
+                input_max="100"
+                :theme_bg="theme_bg"
+                :theme_text="theme_text"
+                :theme_label="theme_text"
+                :theme_border="theme_border"
+                @update:modelValue="
+                  (v) =>
+                    $emit('action:update', {
+                      endpoint: `/settings/message`,
+                      value: v,
+                      admin: true,
+                    })
+                "
+              ></FormField>
+            </div>
+            <div class="flex">
+              <FormField
+                label="password"
+                :modelValue="data.settings.password"
+                input_type="password"
+                input_max="20"
+                :autocomplete="false"
+                :theme_bg="theme_bg"
+                :theme_text="theme_text"
+                :theme_label="theme_text"
+                :theme_border="theme_border"
+                @update:modelValue="
+                  (v) =>
+                    $emit('action:update', {
+                      endpoint: `/settings/password`,
+                      value: v,
+                      admin: true,
+                    })
+                "
+              ></FormField>
+            </div>
+          </div>
+
           <details>
-            <summary class="cursor-pointer">Candidates</summary>
+            <summary class="cursor-pointer">Base pool</summary>
             <table class="table-fixed w-full">
               <tbody>
                 <tr :class="theme_text">
@@ -73,7 +165,7 @@
                 </tr>
                 <tr
                   class="h-14"
-                  v-for="(element, key, index) in data.candidates"
+                  v-for="(element, key, index) in data.settings.base_pool"
                   :class="[theme_text, index % 2 ? theme_even : theme_odd]"
                 >
                   <td class="text-left text-sm pl-3">
@@ -99,8 +191,13 @@
                                 >{{ value }}</a
                               >
                               <img
-                                v-else-if="element_key === 'asset'"
+                                v-else-if="['asset'].includes(element_key)"
                                 class="bg-clip-content object-cover h-[360px] w-[360px]"
+                                :src="value"
+                              />
+                              <img
+                                v-else-if="['title_img'].includes(element_key)"
+                                class="h-6 w-6"
                                 :src="value"
                               />
                               <div class="first-letter:capitalize" v-else>
@@ -113,12 +210,12 @@
                     </details>
                   </td>
                   <td class="text-right text-sm pr-3">
-                    <FormButton label="-" :minimal="true"></FormButton>
+                    <!-- <FormButton label="-" :minimal="true"></FormButton> -->
                   </td>
                 </tr>
                 <tr>
                   <td
-                    v-if="!data.candidates"
+                    v-if="!data.settings.base_pool"
                     class="w-full select-none px-2 py-3 text-xs bg-gray-200 text-gray-500"
                   >
                     Empty list
@@ -133,11 +230,29 @@
     </div>
     <!-- Rounds -->
     <div class="flex-wrap gap-2 pt-6">
-      <h3 class="font-bold">Rounds</h3>
       <div
         v-if="data && data.event && data.event.rounds"
         v-for="(round, index) in data.event.rounds"
       >
+        <div class="w-full">
+          <h3 class="font-bold">Round {{ index }}</h3>
+          <span class="flex justify-end">
+            <FormButton
+              label="Remove"
+              theme_bg="bg-danger"
+              :minimal="true"
+              @action:button="
+                (v) =>
+                  $emit('action:update', {
+                    endpoint: `/event/rounds`,
+                    value: data.event.rounds.filter((_, i) => i !== index),
+                    admin: true,
+                    confirm: `Are you sure to remove round ${index}?`,
+                  })
+              "
+            ></FormButton
+          ></span>
+        </div>
         <div class="border rounded-xl px-4 py-4 my-4" :class="theme_border">
           <div class="flex">
             <FormToggle
@@ -145,6 +260,14 @@
               :modelValue="round.locked"
               :theme_text="theme_text"
               :theme_bg="theme_bg"
+              @update:modelValue="
+                (v) =>
+                  $emit('action:update', {
+                    endpoint: `/event/rounds/${index}/locked`,
+                    value: v,
+                    admin: true,
+                  })
+              "
             ></FormToggle>
           </div>
           <div class="flex my-4">
@@ -153,6 +276,14 @@
               :modelValue="round.watch"
               :theme_text="theme_text"
               :theme_bg="theme_bg"
+              @update:modelValue="
+                (v) =>
+                  $emit('action:update', {
+                    endpoint: `/event/rounds/${index}/watch`,
+                    value: v,
+                    admin: true,
+                  })
+              "
             ></FormToggle>
           </div>
           <div class="inline-flex gap-2">
@@ -166,6 +297,14 @@
               :theme_text="theme_text"
               :theme_label="theme_text"
               :theme_border="theme_border"
+              @update:modelValue="
+                (v) =>
+                  $emit('action:update', {
+                    endpoint: `/event/rounds/${index}/name`,
+                    value: v,
+                    admin: true,
+                  })
+              "
             ></FormField>
             <FormField
               label="max"
@@ -186,6 +325,15 @@
               :theme_text="theme_text"
               :theme_label="theme_text"
               :theme_border="theme_border"
+              @update:modelValue="
+                (v) =>
+                  $emit('action:update', {
+                    endpoint: `/event/rounds/${index}/max`,
+                    value: v,
+                    admin: true,
+                    numberify: true,
+                  })
+              "
             ></FormField>
             <FormField
               label="points"
@@ -197,6 +345,15 @@
               :theme_text="theme_text"
               :theme_label="theme_text"
               :theme_border="theme_border"
+              @update:modelValue="
+                (v) =>
+                  $emit('action:update', {
+                    endpoint: `/event/rounds/${index}/points`,
+                    value: v,
+                    admin: true,
+                    numberify: true,
+                  })
+              "
             ></FormField>
           </div>
           <div>
@@ -216,7 +373,9 @@
                   "
                   :pool="
                     filter(
-                      data && data.candidates ? data.candidates : {},
+                      data && data.settings && data.settings.base_pool
+                        ? data.settings.base_pool
+                        : {},
                       data &&
                         data.event &&
                         data.event.rounds &&
@@ -231,6 +390,14 @@
                   :theme_border="theme_border"
                   :theme_odd="theme_odd"
                   :theme_even="theme_even"
+                  @update:modelValue="
+                    (v) =>
+                      $emit('action:update', {
+                        endpoint: `/event/rounds/${index}/pool`,
+                        value: v,
+                        admin: true,
+                      })
+                  "
                 ></FormList>
               </div>
             </details>
@@ -272,6 +439,14 @@
                   :theme_border="theme_border"
                   :theme_odd="theme_odd"
                   :theme_even="theme_even"
+                  @update:modelValue="
+                    (v) =>
+                      $emit('action:update', {
+                        endpoint: `/event/rounds/${index}/qualified`,
+                        value: v,
+                        admin: true,
+                      })
+                  "
                 ></FormList>
               </div>
             </details>
@@ -279,12 +454,47 @@
         </div>
       </div>
     </div>
+    <div class="flex-wrap">
+      <div class="flex my-2 justify-center">
+        <FormButton
+          label="Add round"
+          @action:button="
+            (v) =>
+              $emit('action:update', {
+                endpoint: `/event/rounds/${data.event.rounds.length}`,
+                value: {
+                  locked: true,
+                  max: 1,
+                  name: `Round ${data.event.rounds.length}`,
+                  points: 1,
+                  watch: true,
+                },
+                admin: true,
+              })
+          "
+        ></FormButton>
+      </div>
+      <div class="flex my-2 justify-center">
+        <FormButton
+          label="Delete this event"
+          theme_bg="bg-danger"
+          @action:button="
+            (v) =>
+              $emit('action:update', {
+                endpoint: `/`,
+                value: {},
+                admin: true,
+                confirm: `Are you sure to remove this event (no recovery will be possible) ?`,
+              })
+          "
+        ></FormButton>
+      </div>
+    </div>
   </div>
 </template>
 
 <script>
 export default {
-  //@TODO faire un id qui correspond a un endpoint ?
   props: {
     data: {
       type: Object,
@@ -296,6 +506,10 @@ export default {
     },
     theme_bg: {
       default: "bg-white",
+      type: String,
+    },
+    theme_label: {
+      default: "text-black",
       type: String,
     },
     theme_border: {
@@ -331,5 +545,6 @@ export default {
       return `<a href='${url}' style='text-decoration: underline;'>${url}</a>`;
     },
   },
+  emits: ["action:update"],
 };
 </script>

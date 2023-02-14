@@ -1,71 +1,61 @@
 <template>
-  <div
-    class="w-[360px] border-gray-200 border rounded-xl"
-    :class="[
-      voting
-        ? theme_default
-        : liked && qualified
+  <div class="w-[360px] border-gray-200 border rounded-xl" :class="[
+    voting
+      ? theme_default
+      : liked && qualified
         ? theme_valid
         : liked && !qualified
-        ? theme_invalid
-        : !liked && qualified
-        ? theme_info
-        : theme_default,
-    ]"
-  >
+          ? theme_invalid
+          : !liked && qualified
+            ? theme_info
+            : theme_default,
+  ]">
     <div class="p-3 flex">
       <div class="w-11/12">
         <a v-if="link !== ''" :href="link" target="_blank">
-          <h1 class="mb-2 font-bold capitalize" :class="theme_text">
+          <h1 class="inline-block mb-2 font-bold capitalize" :class="theme_text">
             {{ title }}
           </h1>
         </a>
-        <h1 v-else class="mb-2 font-bold capitalize" :class="theme_text">
+        <h1 v-else class="inline-block mb-2 font-bold capitalize" :class="theme_text">
           {{ title }}
         </h1>
+        <img v-if="title_img != ''" class="inline-block h-6 w-6" :src="title_img" />
         <h3 class="uppercase text-sm" :class="theme_subtext">{{ subtitle }}</h3>
       </div>
       <div>
-        <span
-          v-if="voting"
-          class="material-symbols-outlined text-4xl cursor-pointer select-none"
-          v-bind:class="{
+        <span v-if="voting" class="material-symbols-outlined text-4xl cursor-pointer select-none" v-bind:class="{
             active: liked,
-          }"
-          @click="$emit('action:vote', id)"
-          >favorite</span
-        >
-        <span
-          v-else-if="liked && qualified"
-          class="material-symbols-outlined text-4xl text-success-dark select-none"
-        >
+          }" @click="$emit('action:vote', id)">favorite</span>
+        <span v-else-if="liked && qualified" class="material-symbols-outlined text-4xl text-success-dark select-none">
           check_circle
         </span>
-        <span
-          v-else-if="liked && !qualified"
-          class="material-symbols-outlined text-4xl text-danger-dark select-none"
-        >
+        <span v-else-if="liked && !qualified" class="material-symbols-outlined text-4xl text-danger-dark select-none">
           block
         </span>
-        <span
-          v-if="state"
-          class="text-white select-none px-2 text-xs rounded-xl"
-          :class="[
+        <span v-if="state" class="text-white select-none px-2 text-xs rounded-xl" :class="[
             ['live'].includes(state) ? 'bg-success-darkest' : null,
             ['coming'].includes(state) ? 'bg-info-dark' : null,
             state === 'archived' ? 'bg-neutral-dark' : null,
             ['live', 'coming', 'archived'].includes(state)
               ? null
               : 'bg-gray-400',
-          ]"
-        >
+          ]">
           {{ state }}
         </span>
       </div>
     </div>
-    <img class="object-top bg-clip-content" :class="[theme_img]" :src="asset" />
-    <div class="p-3">
-      <p class="first-letter:capitalize" :class="theme_text">{{ abstract }}</p>
+    <img class="object-top bg-clip-content" :class="[theme_img]" :src="asset === ''
+      ? 'https://firebasestorage.googleapis.com/v0/b/contestarena-5c70a.appspot.com/o/template%2Fdefault_card.png?alt=media&token=ab4675ab-29df-4e75-99ee-a070840909c4'
+      : asset
+      " />
+    <iframe v-if="abstract.includes('open.spotify.com') || abstract.includes('widget.deezer.com')" class="rounded-b-xl bg-[#282828]" :src="abstract" width="100%"
+      height="80" frameBorder="0" allowtransparency="true" allowfullscreen="" allow="encrypted-media; clipboard-write"
+      loading="lazy"></iframe>
+    <div v-else>
+      <p class="first-letter:capitalize p-3" :class="theme_text">
+        {{ abstract }}
+      </p>
     </div>
   </div>
 </template>
@@ -81,6 +71,10 @@ export default {
       default: "",
       type: String,
     },
+    title_img: {
+      default: "",
+      type: String,
+    },
     state: {
       type: String,
     },
@@ -93,8 +87,7 @@ export default {
       type: String,
     },
     asset: {
-      default:
-        "https://firebasestorage.googleapis.com/v0/b/contestarena-5c70a.appspot.com/o/template%2Fdefault_card.png?alt=media&token=ab4675ab-29df-4e75-99ee-a070840909c4",
+      default: "",
       type: String,
     },
     abstract: {
@@ -132,7 +125,7 @@ export default {
       type: String,
     },
     theme_img: {
-      default: "object-scale-down h-48 w-96",
+      default: "object-fill h-48 w-[360px]",
       type: String,
     },
   },

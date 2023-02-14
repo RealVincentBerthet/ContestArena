@@ -1,3 +1,5 @@
+import firebaseConfig from './firebaseConfig';
+
 export default {
   // Disable server-side rendering: https://go.nuxtjs.dev/ssr-mode
   ssr: false,
@@ -19,7 +21,7 @@ export default {
     ],
     link: [
       { rel: 'icon', type: 'image/x-icon', href: '/favicon.png' },
-      { rel: "stylesheet", href: "https://fonts.googleapis.com/css2?family=Poppins&display=swap", type:"text/css" },
+      { rel: "stylesheet", href: "https://fonts.googleapis.com/css2?family=Poppins&display=swap", type: "text/css" },
       { rel: "stylesheet", href: "https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:opsz,wght,FILL,GRAD@20..48,100..700,0..1,-50..200" }
     ]
   },
@@ -45,6 +47,7 @@ export default {
   modules: [
     '@nuxtjs/firebase',
     '@nuxtjs/toast',
+    'nuxt-vue-multiselect',
   ],
 
   toast: {
@@ -52,7 +55,7 @@ export default {
   },
 
   firebase: {
-    config: firebaseConfig,
+    config: firebaseConfig, // firebaseConfig.js
     services: {
       auth: {
         persistence: 'local', // default

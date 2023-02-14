@@ -1,6 +1,7 @@
 <template>
   <div>
-    <section>
+    <NavBar :title="title" :theme_bg="theme_nav"></NavBar>
+    <section class="mx-4">
       <!-- year selection -->
       <div class="block fixed inset-x-0 top-14 z-10 bg-default-lightest">
         <NavSubBar
@@ -9,42 +10,41 @@
           :tabs="_tabs"
         ></NavSubBar>
       </div>
-    </section>
-    <!-- event selection -->
-    <div class="flex flex-wrap justify-center gap-4 my-16 w-full">
-      <NuxtLink
-        v-for="(item, key) in _event"
-        :to="'contest?id=' + key"
-        :key="key"
-      >
+
+      <!-- event selection -->
+      <div class="flex flex-wrap justify-center gap-4 my-16 w-full">
         <ContestCard
+          v-for="(item, key) in _event"
+          :key="key"
           :id="key"
-          :title="item.info.name"
+          :title="item.settings.info.name"
           :state="contestStatus(item)"
-          :subtitle="date(item.info.date)"
-          :asset="item.info.asset"
-          :abstract="item.info.abstract"
+          :subtitle="date(item.settings.info.date)"
+          :asset="item.settings.info.asset"
+          :abstract="item.settings.info.abstract"
           :voting="false"
+          @click.native="$router.push('/contest?id=' + key)"
+          class="cursor-pointer"
         ></ContestCard>
-      </NuxtLink>
-    </div>
+      </div>
+    </section>
   </div>
 </template>
 
 <script>
 export default {
-  //@TODO wall of fame + champion en titre "mettre des badges a coté du pseudo"
-  layout: "contest",
   head() {
     return {
-      title: "Contest Arena",
+      title: this.title,
       bodyAttrs: {
-        class: "bg-default-lightest",
+        class: this.theme_nav,
       },
     };
   },
   data() {
     return {
+      title: "Contest Arena",
+      theme_nav: "bg-default-lightest",
       data: {},
       tab: "",
     };
@@ -65,7 +65,9 @@ export default {
         let ret = {};
         for (const [key, value] of Object.entries(this.data)) {
           const date = new Date(
-            value.info && value.info.date ? value.info.date : ""
+            value.settings && value.settings.info && value.settings.info.date
+              ? value.settings.info.date
+              : ""
           );
 
           if (date.getFullYear() == this.tab) {
@@ -79,10 +81,14 @@ export default {
       get() {
         let ret = {};
         for (const value of Object.values(this.data)) {
-          const date = new Date(
-            value.info && value.info.date ? value.info.date : ""
-          ).getFullYear();
-          ret[date] = {};
+          if (value.settings && value.settings.info) {
+            const date = new Date(
+              value.settings && value.settings.info && value.settings.info.date
+                ? value.settings.info.date
+                : ""
+            ).getFullYear();
+            ret[date] = {};
+          }
         }
         return ret;
       },
@@ -95,14 +101,15 @@ export default {
         timeStyle: "short",
       });
     },
-    eventPerYear(year) {
-      let ret = {};
-
-      return ret;
-    },
     contestStatus(item) {
       let ret = "disabled";
-      if (item && item.event && item.event.enabled && item.event.rounds) {
+      if (
+        item &&
+        item.event &&
+        item.settings &&
+        item.settings.enabled &&
+        item.event.rounds
+      ) {
         let locked = [];
         let qualified = [];
 

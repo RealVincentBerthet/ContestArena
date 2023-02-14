@@ -10,6 +10,7 @@
       disabled ? null : 'select-none cursor-pointer',
       minimal ? 'text-xs' : 'py-3 w-full',
     ]"
+    @click="$emit('action:button')"
   />
 </template>
 
@@ -40,6 +41,7 @@ export default {
       default: "text-white",
       type: String,
     },
+    emits: ["action:button"],
   },
 };
 </script>

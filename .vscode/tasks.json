@@ -1,0 +1,58 @@
+{
+	"version": "2.0.0",
+	"tasks": [
+		{
+			"type": "npm",
+			"script": "dev",
+			"problemMatcher": [],
+			"label": "npm: dev",
+			"detail": "nuxt",
+			"options": {
+				"env": {
+					"NODE_OPTIONS": "--openssl-legacy-provider"
+				}
+			}
+		},
+		{
+			"type": "npm",
+			"script": "build",
+			"group": "build",
+			"problemMatcher": [],
+			"label": "npm: build",
+			"detail": "nuxt build",
+			"options": {
+				"env": {
+					"NODE_OPTIONS": "--openssl-legacy-provider"
+				}
+			}
+		},
+		{
+			"type": "npm",
+			"script": "generate",
+			"group": "build",
+			"problemMatcher": [],
+			"label": "npm: generate",
+			"detail": "nuxt generate"
+		},
+		{
+			"command": "firebase deploy",
+			"args": [
+				"--only",
+				"hosting:contestarena"
+			],
+			"group": "build",
+			"problemMatcher": [],
+			"label": "firebase: deploy",
+			"detail": "firebase deploy"
+		},
+		{
+			"label": "Release",
+			"dependsOrder": "sequence",
+			"dependsOn": [
+				"npm: build",
+				"npm: generate",
+				"firebase deploy"
+			]
+		},
+	]
+}
