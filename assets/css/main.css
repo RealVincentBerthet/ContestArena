@@ -1,0 +1,18 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+body {
+  font-family: "Poppins";
+}
+
+.toasted-container {
+  margin-bottom: 35px;
+  padding-left: 15px;
+  padding-right: 15px;
+}
+/* 
+.toasted.toasted-primary.toast-theme {
+  background: #020222;
+  border-radius: 4px;
+} */
