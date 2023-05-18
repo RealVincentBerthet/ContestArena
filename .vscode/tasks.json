@@ -40,11 +40,8 @@
 			}
 		},
 		{
-			"command": "firebase deploy",
-			"args": [
-				"--only",
-				"hosting:contestarena"
-			],
+			"type": "shell",
+			"command": "firebase deploy --only hosting:contestarena",
 			"group": "build",
 			"problemMatcher": [],
 			"label": "firebase: deploy",
