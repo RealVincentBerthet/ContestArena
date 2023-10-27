@@ -1,5 +1,5 @@
 <template>
-  <nav class="py-3 px-3 sticky w-full z-20 top-0" :class="[theme_bg, theme_text]">
+  <nav v-if="!$store.getters['loader/visible']" class="block fixed inset-x-0 top-0 z-20 py-3 px-3 w-full" :class="[theme_bg, theme_text]">
     <div class="flex items-center justify-between">
       <div v-if="!isHome()" class="flex justify-center text-2xl cursor-pointer material-symbols-outlined w-8"
         @click.prevent="$router.push('/')">

@@ -1,10 +1,10 @@
 <template>
-  <div class="max-w-lg">
+  <div class="max-w-lg pt-28">
     <div v-if="ranking.length > 0">
       <FormMultiSelect :modelValue="modelValue" :options="filters"
         @update:modelValue="(v) => $emit('update:modelValue', v)">
       </FormMultiSelect>
-      <table class="table-fixed w-full">
+      <table class="table-fixed w-full mt-2">
         <tbody>
           <tr :class="theme_text">
             <th scope="col" class="w-12"></th>

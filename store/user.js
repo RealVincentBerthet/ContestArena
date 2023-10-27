@@ -2,7 +2,7 @@ export const state = () => ({
     pseudo: "",
     country: "",
     squads: [],
-    advanced: { ranking_filters: ["countries", "squads"] },
+    advanced: { ranking_filters: ["countries", "squads"], theme: "light", language: "en"},
 })
 
 export const mutations = {
@@ -22,6 +22,8 @@ export const getters = {
     country: state => state.country,
     squads: state => state.squads,
     ranking_filters: state => state.advanced.ranking_filters,
+    theme: state => state.advanced.theme,
+    language: state => state.advanced.language,
     getUser(state) {
         return { pseudo: state.pseudo, country: state.country, squads: state.squads }
     },

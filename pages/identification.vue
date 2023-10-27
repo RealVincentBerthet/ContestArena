@@ -9,7 +9,7 @@
         </div>
       </section>
       <!-- register / login / login_reset -->
-      <section class="my-16 px-3">
+      <section class="mt-32 px-3">
         <div class="w-full max-w-lg items-center mx-auto">
           <div v-if="['register', 'login'].includes(tab)" class="w-full max-w-lg items-center mx-auto">
             <div class="flex justify-center">
@@ -70,12 +70,12 @@
               @click="tab = 'login_reset'">
               forgot password?
             </div>
-            <FormButton type="submit" :label="tabs[tab].name" :disabled="_is_submit_disabled" class="my-8"></FormButton>
+            <FormButton type="submit" :label="tabs[tab].name" :disabled="_is_submit_disabled" class="my-8 w-full"></FormButton>
           </form>
         </div>
       </section>
     </div>
-    <div v-else-if="['profile', 'profile_edit'].includes(tab)">
+    <div v-else-if="['profile', 'profile_edit'].includes(tab)" class="mt-24">
       <!-- <div class="flex">
         <div class="w-full text-center material-symbols-outlined">
           <div class="text-8xl text-center">account_circle</div>
@@ -122,10 +122,10 @@
             <FormField :modelValue="password" @update:modelValue="(v) => (password = v)" :autocomplete="false"
               label="password" input_type="password" input_min="6" theme_bg="bg-neutral" theme_text="text-black"
               theme_label="text-black" theme_border="border-neutral"></FormField>
-            <FormButton type="submit" label="Update" :disabled="_is_submit_disabled" class="my-8"></FormButton>
+            <FormButton type="submit" label="Update" :disabled="_is_submit_disabled" class="my-8 w-full"></FormButton>
           </form>
           <span class="w-full" @click="tab = 'profile'">
-            <FormButton label="cancel"></FormButton>
+            <FormButton class="w-full" label="cancel"></FormButton>
           </span>
         </div>
       </section>

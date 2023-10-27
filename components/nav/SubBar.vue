@@ -3,38 +3,38 @@
     <div class="flex-wrap overflow-x-auto">
       <ul class="flex">
         <li
-          v-for="(item, key, index) in _tabs"
-          v-if="item.active || item.active === undefined"
+          v-for="(value, index) in _tabs"
+          v-if="value.active"
         >
           <input
             type="radio"
-            :name="item.name ? item.name : key"
-            :id="key"
+            :name="value.name ? value.name : value.key"
+            :id="value.key"
             class="peer w-full hidden"
-            :disabled="item.disabled !== undefined && item.disabled"
-            :value="key"
+            :disabled="value.disabled"
+            :value="value.key"
             v-model="modelValue"
             @input="$emit('update:modelValue', $event.target.value)"
           />
 
           <label
-            :for="key"
-            class="block px-2 min-w-fit w-24 text-center select-none leading-10 h-full first-letter:capitalize"
+            :for="value.key"
+            class="block px-2 min-w-fit w-20 text-center select-none leading-10 h-full first-letter:capitalize"
             :class="[
               theme_text,
-              item.disabled !== undefined && item.disabled
+              value.disabled
                 ? 'cursor-not-allowed'
                 : 'cursor-pointer',
-              key === modelValue
+              value.key === modelValue
                 ? theme_active
-                : item.disabled !== undefined && item.disabled
+                : value.disabled
                 ? 'bg-gray-200'
                 : theme_inactive,
               index === 0 ? 'rounded-l-full' : '',
               index === Object.keys(_tabs).length - 1 ? 'rounded-r-full' : '',
             ]"
           >
-            {{ item.name ? item.name : key }}
+            {{ value.name ? value.name : value.key }}
           </label>
         </li>
       </ul>
@@ -50,7 +50,7 @@ export default {
       type: String,
     },
     tabs: {
-      type: Object,
+      type: [Object, Map],
       default: {},
     },
     theme_active: {
@@ -69,12 +69,24 @@ export default {
   computed: {
     _tabs: {
       get() {
-        let tabs = {};
-        for (const [key, value] of Object.entries(this.tabs)) {
-          if (value.active === undefined || value.active) {
-            tabs[key] = value;
+        let tabs = [];
+        if (this.tabs instanceof Map) {
+          for (const [key, value] of this.tabs.entries()) {
+            value["key"] = key;
+            value["disabled"] = "disabled" in value ? value["disabled"] : false;
+          value["active"] = "active" in value ? value["active"] : true;
+            tabs.push(value);
+          }
+        } else {
+          for (const [key, value] of Object.entries(this.tabs)) {
+            value["key"] = key
+            value["disabled"] = "disabled" in value ? value["disabled"] : false;
+            value["active"] = "active" in value ? value["active"] : true;
+            tabs.push(value);
           }
         }
+        tabs = tabs.filter(item => item.active === true);
+
         return tabs;
       },
     },

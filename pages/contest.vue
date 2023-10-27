@@ -38,7 +38,7 @@
               :theme_active="theme.bg.dark" :theme_inactive="theme.bg.light" :theme_text="theme.text.default"></NavSubBar>
           </div>
           <!-- cards -->
-          <div class="flex flex-wrap justify-center gap-4 my-16 w-full">
+          <div class="flex flex-wrap justify-center gap-4 mb-20 mt-32 w-full">
             <ContestCard v-for="(candidate, key) in data &&
                 data.settings &&
                 data.settings.base_pool
@@ -59,7 +59,7 @@
         <section v-else-if="tab === 'ranking'">
           <div class="block fixed inset-x-0 top-14 z-10" :class="theme.bg.lightest">
             <NavSubBar :modelValue="subtab" @update:modelValue="(v) => (subtab = v)" :tabs="_tabs_ranking"
-              :theme_active="theme.bg.dark" :theme_inactive="theme.bg.default" :theme_text="theme.text.default">
+              :theme_active="theme.bg.dark" :theme_inactive="theme.bg.light" :theme_text="theme.text.default">
             </NavSubBar>
           </div>
           <div v-if="subtab === 'ranks'" class="flex flex-wrap justify-center gap-4 my-16 w-full">
@@ -69,17 +69,24 @@
               :theme_odd="theme.bg.light" :theme_even="theme.bg.lightest" :theme_text="theme.text.default">
             </ContestRanking>
           </div>
-          <div v-else-if="subtab === 'advanced'"></div>
+          <div v-else-if="subtab === 'advanced'"  class="flex flex-wrap justify-center gap-4 my-16 w-full">
+            <ContestRankingAdvanced :pool="event_pool_all" :tabs="_tabs_rounds" :rounds="event_rounds" :players="event_players" :filters="_ranking_filters"
+                :modelValue="$store.getters['event/ranking_filter'] ? $store.getters['event/ranking_filter'] : []"
+                @update:modelValue="(v) => $store.commit('event/setRankingFilter', v)"
+                :theme_active="theme.bg.dark" :theme_inactive="theme.bg.light"
+                :theme_odd="theme.bg.light" :theme_even="theme.bg.lightest" :theme_text="theme.text.default">
+            </ContestRankingAdvanced>
+          </div>
         </section>
         <!-- rules -->
-        <section v-else-if="tab === 'rules'">
+        <section v-else-if="tab === 'rules'" class="mt-32">
           <div>
             <ContestRules :rounds="event_rounds" :theme="data.settings.theme" :theme_text="theme.text.default">
             </ContestRules>
           </div>
         </section>
         <!-- admin -->
-        <section v-else-if="tab == 'admin'">
+        <section v-else-if="tab == 'admin'" class="mt-32">
           <div class="flex items-center justify-center w-full mt-12 mb-12">
             <FormToggle label="Administrator" :modelValue="_admin_on" @update:modelValue="(v) => (_admin_on = v)"
               :theme_text="theme.text.default" :theme_bg="theme.bg.default"></FormToggle>
@@ -118,7 +125,7 @@
       </div>
     </div>
   </div>
-  <div v-else class="mt-16">
+  <div v-else-if="!$store.getters['loader/visible']" class="mt-16">
     <span class="material-symbols-outlined text-center w-full text-9xl" :class="[theme.text.light]">
       sentiment_very_dissatisfied
     </span>
@@ -230,7 +237,7 @@ export default {
     },
     _tabs_ranking: {
       get() {
-        let ret = { ranks: {}, advanced: { disabled: true } };
+        let ret = { ranks: {name:"ranks"}, advanced: {name:"advanced"} };
 
         return ret;
       },
@@ -359,14 +366,13 @@ export default {
     _likes: {
       get() {
         let likes = [];
-        if (this.$fire.auth.currentUser) {
+        if (this.$fire.auth.currentUser || this._watching) {
           if (this._admin_on && !this._watching) {
             return this.event_qualified;
           } else {
             let uid = this._watching
               ? this.watching.uid
               : this.$fire.auth.currentUser.uid;
-
             likes =
               this.event_players &&
                 this.event_players[uid] &&
@@ -379,7 +385,6 @@ export default {
                 : [];
           }
         }
-
         return likes;
       },
     },
@@ -461,6 +466,11 @@ export default {
         return this.event_round && this.event_round.pool
           ? this.event_round.pool
           : [];
+      },
+    },
+    event_pool_all: {
+      get() {
+        return this.data && this.data.settings && this.data.settings.base_pool ? this.data.settings.base_pool : {};
       },
     },
     event_qualified: {

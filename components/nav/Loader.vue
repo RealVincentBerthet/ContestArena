@@ -1,5 +1,5 @@
 <template>
-  <section class="my-32">
+  <section class="block fixed inset-x-0 top-28 z-0">
     <div
       v-if="type == 'dots'"
       class="flex items-center justify-center space-x-2 animate-bounce"

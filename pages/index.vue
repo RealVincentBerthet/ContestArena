@@ -1,31 +1,18 @@
 <template>
-  <div>
+  <div v-if="!$store.getters['loader/visible']">
     <NavBar :title="title" :theme_bg="theme_nav"></NavBar>
     <section class="mx-4">
       <!-- year selection -->
       <div class="block fixed inset-x-0 top-14 z-10 bg-default-lightest">
-        <NavSubBar
-          :modelValue="tab"
-          @update:modelValue="(v) => (tab = v)"
-          :tabs="_tabs"
-        ></NavSubBar>
+        <NavSubBar :modelValue="tab" @update:modelValue="(v) => (tab = v)" :tabs="_tabs"></NavSubBar>
       </div>
 
       <!-- event selection -->
-      <div class="flex flex-wrap justify-center gap-4 my-16 w-full">
-        <ContestCard
-          v-for="(item, key) in _event"
-          :key="key"
-          :id="key"
-          :title="item.settings.info.name"
-          :state="contestStatus(item)"
-          :subtitle="date(item.settings.info.date)"
-          :asset="item.settings.info.asset"
-          :abstract="item.settings.info.abstract"
-          :voting="false"
-          @click.native="$router.push('/contest?id=' + key)"
-          class="cursor-pointer"
-        ></ContestCard>
+      <div class="flex flex-wrap justify-center gap-4 my-4 pt-32 w-full">
+        <ContestCard v-for="(item, key) in _event" :key="key" :id="key" :title="item.settings.info.name"
+          :state="contestStatus(item)" :subtitle="date(item.settings.info.date)" :asset="item.settings.info.asset"
+          :abstract="item.settings.info.abstract" :voting="false" @click.native="$router.push('/contest?id=' + key)"
+          class="cursor-pointer"></ContestCard>
       </div>
     </section>
   </div>
@@ -50,10 +37,12 @@ export default {
     };
   },
   async fetch() {
+    this.$store.commit("loader/setVisible", 1);
     try {
       await this.$fire.database.ref("/contest").on("value", (snapshot) => {
         this.data = snapshot.val();
         this.tab = Object.keys(this._tabs)[Object.keys(this._tabs).length - 1];
+        this.$store.commit("loader/setVisible", -1);
       });
     } catch (e) {
       console.error(e);
@@ -112,7 +101,6 @@ export default {
       ) {
         let locked = [];
         let qualified = [];
-
         item.event.rounds.forEach((element) => {
           locked.push(element.locked);
           qualified.push(

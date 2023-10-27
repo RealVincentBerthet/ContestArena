@@ -458,6 +458,7 @@
       <div class="flex my-2 justify-center">
         <FormButton
           label="Add round"
+          class="w-full"
           @action:button="
             (v) =>
               $emit('action:update', {
@@ -477,6 +478,7 @@
       <div class="flex my-2 justify-center">
         <FormButton
           label="Delete this event"
+          class="w-full"
           theme_bg="bg-danger"
           @action:button="
             (v) =>

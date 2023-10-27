@@ -8,7 +8,7 @@
       theme_bg,
       theme_text,
       disabled ? null : 'select-none cursor-pointer',
-      minimal ? 'text-xs' : 'py-3 w-full',
+      minimal ? 'text-xs' : 'py-3',
     ]"
     @click="$emit('action:button')"
   />

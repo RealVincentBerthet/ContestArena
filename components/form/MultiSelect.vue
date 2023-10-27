@@ -1,7 +1,7 @@
 <template>
   <div>
     <!-- https://vue-multiselect.js.org/#sub-getting-started -->
-    <multiselect v-model="val" :options="options" :multiple="true" group-values="libs" group-label="language"
+    <multiselect class="max-w-lg" v-model="val" :options="options" :multiple="true" group-values="libs" group-label="language"
       :group-select="true" placeholder="No filter" track-by="name" label="name"><span slot="noResult">No elements
         found.</span></multiselect>
     <!-- <pre class="language-json"><code>{{ modelValue }}</code></pre> -->

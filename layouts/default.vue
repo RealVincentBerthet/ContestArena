@@ -4,7 +4,7 @@
       type="dots"
       v-if="$store.getters['loader/visible']"
     ></NavLoader>
-    <Nuxt v-if="!$store.getters['loader/visible']" />
+    <Nuxt v-else />
   </div>
 </template>
 
@@ -22,8 +22,8 @@ export default {
             this.$store.commit("loader/setVisible", -1);
           });
       } else {
-        this.$store.commit("loader/setVisible", -1);
         this.$store.commit("user/setUser", {});
+        this.$store.commit("loader/setVisible", -1);
       }
     } catch (e) {
       console.error(e);
