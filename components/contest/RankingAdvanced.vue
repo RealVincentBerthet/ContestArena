@@ -43,7 +43,7 @@
                 :key="ranked.candidate" :class="[theme_text, index % 2 ? theme_even : theme_odd]"
                 @click="focus = [ranked.candidate]">
                 <td class="text-left text-xs pl-3"># {{ ranked.rank + 1 }}</td>
-                <td class="w-20"><img :src="ranked.candidate_data.asset" :title="ranked.candidate" /></td>
+                <td class="w-20"><img :src="ranked.candidate_data.asset[asset_in_use]" :title="ranked.candidate" /></td>
                 <td class="pl-3 text-xs">{{ ranked.candidate }}</td>
                 <td class="text-xs">{{ ranked.votes }}
                 <span v-if="tab == 'all'">{{ ranked.voter.map((subarray) => subarray.length)}}
@@ -154,6 +154,10 @@ export default {
     theme_even: {
       default: "bg-neutral-lightest",
       type: String,
+    },
+    asset_in_use: {
+      default: 0,
+      type: Number,
     },
   },
   emits: ["action:watch", "update:modelValue"],

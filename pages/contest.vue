@@ -29,7 +29,6 @@
     <!-- contest content -->
     <div v-else>
       <div v-if="data.event && data.event.rounds" class="mx-4">
-        <!--@TODO nok fix top if the title is too long-->
         <!-- choices -->
         <section v-if="['choices', 'watching'].includes(tab)">
           <!-- round selection -->
@@ -47,7 +46,7 @@
               :title_img="candidate.title_img ? candidate.title_img : ''" :subtitle="candidate.subtitle.length
                   ? `${candidate.title} | ${candidate.subtitle}`
                   : candidate.title
-                " :link="candidate.link" :asset="candidate.asset" :abstract="candidate.abstract" :voting="((!event_round.locked && !event_qualified.length) ||
+                " :link="candidate.link" :asset="candidate.asset[data.settings.asset_in_use ? data.settings.asset_in_use : 0]" :abstract="candidate.abstract" :voting="((!event_round.locked && !event_qualified.length) ||
       _admin_on) &&
     event_pool.includes(key)
     " :liked="_likes.includes(key)" :qualified="event_qualified.includes(key)" :theme_default="theme.bg.light"
@@ -74,7 +73,8 @@
                 :modelValue="$store.getters['event/ranking_filter'] ? $store.getters['event/ranking_filter'] : []"
                 @update:modelValue="(v) => $store.commit('event/setRankingFilter', v)"
                 :theme_active="theme.bg.dark" :theme_inactive="theme.bg.light"
-                :theme_odd="theme.bg.light" :theme_even="theme.bg.lightest" :theme_text="theme.text.default">
+                :theme_odd="theme.bg.light" :theme_even="theme.bg.lightest" :theme_text="theme.text.default"
+                :asset_in_use="data.settings.asset_in_use ? data.settings.asset_in_use : 0">
             </ContestRankingAdvanced>
           </div>
         </section>

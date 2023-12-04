@@ -64,6 +64,7 @@ class EventTemplate:
         password: str
         propagate: bool
         theme: str
+        asset_in_use : int
 
     event: Event
     settings: Settings
@@ -122,6 +123,7 @@ class Event(EventTemplate):
             password="",
             propagate=propagate,
             theme=theme,
+            asset_in_use=0,
         )
 
 

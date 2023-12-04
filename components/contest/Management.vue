@@ -37,6 +37,25 @@
               "
             ></FormToggle>
           </div>
+          <FormField
+            :modelValue="data.settings.asset_in_use"
+            label="asset in use"
+            input_type="number"
+            input_min=0
+            :required="true"
+            :theme_bg="theme_bg"
+            :theme_text="theme_text"
+            :theme_label="theme_label"
+            :theme_border="theme_border"
+            @update:modelValue="
+              (v) =>
+                $emit('action:update', {
+                  endpoint: `/settings/asset_in_use`,
+                  value: v,
+                  admin: true,
+                })
+            "
+          ></FormField>
           <FormSelect
             :modelValue="data.settings.theme"
             label="theme"
@@ -190,11 +209,13 @@
                                 style="text-decoration: underline"
                                 >{{ value }}</a
                               >
+                              <span v-else-if="['asset'].includes(element_key)">
                               <img
-                                v-else-if="['asset'].includes(element_key)"
-                                class="bg-clip-content object-cover h-[360px] w-[360px]"
-                                :src="value"
+                                v-for="asset in value"
+                                class="bg-clip-content scale-down w-[200px] h-[200px]"
+                                :src="asset"
                               />
+                              </span>
                               <img
                                 v-else-if="['title_img'].includes(element_key)"
                                 class="h-6 w-6"
