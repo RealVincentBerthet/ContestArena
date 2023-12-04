@@ -10,7 +10,7 @@
       <!-- event selection -->
       <div class="flex flex-wrap justify-center gap-4 my-4 pt-32 w-full">
         <ContestCard v-for="(item, key) in _event" :key="key" :id="key" :title="item.settings.info.name"
-          :state="contestStatus(item)" :subtitle="date(item.settings.info.date)" :asset="item.settings.info.asset"
+          :state="contestStatus(item)" :subtitle="date(item.settings.info.date)" :asset="item.settings.info.asset[0]"
           :abstract="item.settings.info.abstract" :voting="false" @click.native="$router.push('/contest?id=' + key)"
           class="cursor-pointer"></ContestCard>
       </div>

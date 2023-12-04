@@ -10,6 +10,12 @@
 
 <script>
 export default {
+  created() {
+    const params = new URLSearchParams(window.location.search);
+    params.get('debug').split(',').forEach((element) => {
+      this.$store.commit("advanced/addDebugMode", element.trim());
+    });
+  },
   async fetch() {
     this.$store.commit("loader/setVisible", 1);
     try {

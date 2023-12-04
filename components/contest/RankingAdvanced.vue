@@ -12,12 +12,10 @@
         </FormMultiSelect>
         <!-- display mode -->
         <div>
-          <!--
-          <div v-if="focus == undefined" class="flex justify-center px-6 py-2">
+          <div v-if="focus == undefined && $store.getters['advanced/debugMode'].includes('grid')" class="flex justify-center px-6 py-2">
             <FormToggle label="grid" :modelValue="grid_mode" @update:modelValue="(v) => (grid_mode = v)"
               :theme_text="theme_text" :theme_bg="theme_active"></FormToggle>
           </div>
-          -->
           <div v-if="focus != undefined"
             class="flex justify-center px-6 text-2xl cursor-pointer material-symbols-outlined" @click="focus = undefined">
             keyboard_return

@@ -53,6 +53,7 @@
                   endpoint: `/settings/asset_in_use`,
                   value: v,
                   admin: true,
+                  numberify: true,
                 })
             "
           ></FormField>
