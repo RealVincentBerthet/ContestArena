@@ -312,7 +312,7 @@ export default {
         // filter
         this.ranking_advanced.forEach((element) => {
           if (this.focus == undefined || this.focus.includes(element.candidate)) {
-            header.push({ key: element.candidate, img: element.candidate_data.asset });
+            header.push({ key: element.candidate, img: element.candidate_data.asset[this.asset_in_use] });
           }
         });
 
