@@ -107,22 +107,49 @@
                   <th scope="col"></th>
                   <th scope="col" class="w-8"></th>
                 </tr>
-                <tr class="h-14" v-for="(element, key, index) in data.settings.base_pool"
+                <tr class="h-14" v-for="(element, key, index) in  data.settings.base_pool "
                   :class="[theme_text, index % 2 ? theme_even : theme_odd]">
                   <td class="text-left text-sm pl-3">
                     <details>
-                      <summary class="cursor-pointer">{{ key }}</summary>
+                      <summary class="cursor-pointer relative">
+                        {{ key }}
+
+
+                        <FormButton label="delete" :minimal="true" theme_bg="bg-danger"
+                          class="material-symbols-outlined absolute right-8" @action:button="(v) => {
+                            const index = JSON.load(JSON.stringify(data.settings.base_pool)).findIndex(element => element.key === key);
+                            if (index !== -1) {
+                              data.settings.base_pool.splice(index, 1);
+                              $emit('action:update', {
+                                endpoint: `/settings/base_pool/`,
+                                value: data.settings.base_pool,
+                                admin: true,
+                                confirm: `Are you sure to remove this candidate ${key}?`,
+                              });
+                            }
+                          }"></FormButton>
+
+                        <FormButton class="material-symbols-outlined absolute right-0" label="edit" :minimal="true"
+                          @action:button="(v) =>
+                            $emit('action:update', {
+                              endpoint: `/settings/base_pool/` + key + `/abstract`,
+                              value: element.abstract + ` vbe`,
+                              admin: true,
+                            })
+                            "></FormButton>
+                      </summary>
                       <table class="table-auto w-full my-2">
                         <tbody>
-                          <tr v-for="(value, element_key) in element">
+                          <tr v-for="( value, element_key ) in  element ">
                             <td class="border first-letter:capitalize" :class="[theme_text, theme_border]">
                               {{ element_key }}
                             </td>
                             <td class="border first-letter:capitalize" :class="[theme_text, theme_border]">
-                              <a v-if="element_key === 'link'" :href="value" style="text-decoration: underline">{{ value
+                              <a v-if="element_key === 'link'" :href="value" style="text-decoration: underline">{{
+                                value
                               }}</a>
                               <span v-else-if="['asset'].includes(element_key)">
-                                <img v-for="asset in value" class="bg-clip-content scale-down w-[200px] h-[200px]"
+                                <img v-for=" asset  in  value " class="bg-clip-content scale-down w-[200px] h-[200px]"
                                   :src="asset" />
                               </span>
                               <img v-else-if="['title_img'].includes(element_key)" class="h-6 w-6" :src="value" />
@@ -136,7 +163,6 @@
                     </details>
                   </td>
                   <td class="text-right text-sm pr-3">
-                    <!-- <FormButton label="-" :minimal="true"></FormButton> -->
                   </td>
                 </tr>
                 <tr>
@@ -154,7 +180,7 @@
     </div>
     <!-- Rounds -->
     <div class="flex-wrap gap-2 pt-6">
-      <div v-if="data && data.event && data.event.rounds" v-for="(round, index) in data.event.rounds">
+      <div v-if="data && data.event && data.event.rounds" v-for="( round, index ) in data.event.rounds">
         <div class="w-full">
           <h3 class="font-bold">Round {{ index }}</h3>
           <span class="flex justify-end">
