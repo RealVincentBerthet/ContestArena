@@ -227,7 +227,7 @@ export default {
           this.event_rounds.forEach((element, index) => {
             ret[index.toString()] = {
               name: element.name,
-              disabled: !element.pool,
+              disabled: !element.pool || (!element.watch && this._watching && this._admin_on),
             };
           });
         }
@@ -281,7 +281,11 @@ export default {
 
         if (["watching"].includes(this.tab)) {
           if (this._watching) {
-            ret.push({ msg: `Watching as ${this.watching.name}`, id: "watch" });
+            if (this.event_round && this.event_round.watch) {
+              ret.push({ msg: `Watching as ${this.watching.name}`, id: "watch" });
+            } else {
+              ret.push({ msg: "Round is not watchable", id: "watch"});
+            }
           }
         }
 
@@ -347,7 +351,7 @@ export default {
       },
       set(value) {
         const is_me = this.$fire.auth.currentUser ? this.$fire.auth.currentUser.uid == value.uid : false;
-        if((this.event_round && this.event_round.watch && !is_me) || this._admin_on) {
+        if(!is_me || this._admin_on) {
           this.watching = value;
           if (this._watching) {
             this.tab = "watching";
