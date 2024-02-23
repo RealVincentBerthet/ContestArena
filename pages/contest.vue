@@ -49,7 +49,7 @@
                 " :link="candidate.link" :asset="candidate.asset[data.settings.asset_in_use ? data.settings.asset_in_use : 0]" :abstract="candidate.abstract" :voting="((!event_round.locked && !event_qualified.length) ||
       _admin_on) &&
     event_pool.includes(key)
-    " :liked="_likes.includes(key)" :qualified="event_qualified.includes(key)" :theme_default="theme.bg.light"
+    " :liked="_is_watchable ? _likes.includes(key) : false" :qualified="event_qualified.includes(key)" :theme_default="theme.bg.light"
               :theme_text="theme.text.default" :theme_subtext="theme.text.lightest"
               theme_img="object-cover h-[360px] w-[360px]" @action:vote="(v) => vote(v)"></ContestCard>
           </div>
@@ -346,10 +346,19 @@ export default {
         return Object.keys(this.watching).length > 0;
       },
       set(value) {
-        this.watching = value;
-        if (this._watching) {
-          this.tab = "watching";
+        const is_me = this.$fire.auth.currentUser ? this.$fire.auth.currentUser.uid == value.uid : false;
+        if((this.event_round && this.event_round.watch && !is_me) || this._admin_on) {
+          this.watching = value;
+          if (this._watching) {
+            this.tab = "watching";
+          }
         }
+      },
+    },
+    _is_watchable: {
+      get() {
+        const round_watchable = this.event_round ? this.event_round.watch : true;
+        return round_watchable && this._watching || this._admin_on || !this._watching;
       },
     },
     _progress: {
@@ -378,8 +387,7 @@ export default {
                 this.event_players[uid] &&
                 this.event_players[uid].likes &&
                 this.event_players[uid].likes[this.round] &&
-                (this.event_round.watch ||
-                  this._admin_on ||
+                (this._is_watchable ||
                   (this.event_qualified && this.event_qualified.length > 0))
                 ? this.event_players[uid].likes[this.round]
                 : [];
